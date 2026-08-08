@@ -71,7 +71,7 @@
     <header class="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Brand Logo with TikTok Logo image fallback -->
+                <!-- Brand Logo -->
                 <div class="flex items-center space-x-3">
                     <div class="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-slate-100 flex items-center justify-center bg-slate-900">
                         <img 
@@ -95,7 +95,8 @@
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm">
                         <i class="fa-solid fa-gauge-high mr-1.5 text-tiktok-rose"></i> Dashboard
                     </button>
-                    <button onclick="switchTab('admin')" id="nav-admin" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+                    <!-- Admin Tab (Hanya tampil jika Role == Admin) -->
+                    <button onclick="switchTab('admin')" id="nav-admin" class="hidden px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
                         <i class="fa-solid fa-shield-halved mr-1.5 text-sky-500"></i> Admin Center
                         <span id="adminBadge" class="ml-1 px-1.5 py-0.5 text-[9px] bg-sky-100 text-sky-700 font-bold rounded-full">ADMIN</span>
                     </button>
@@ -135,11 +136,8 @@
                         <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50">
                             <div class="px-4 py-2 border-b border-slate-100">
                                 <p class="text-xs text-slate-500">Login sebagai</p>
-                                <p id="dropdownUserEmail" class="text-xs font-bold text-slate-800 truncate">admin</p>
+                                <p id="dropdownUserEmail" class="text-xs font-bold text-slate-800 truncate">user@tiktok.id</p>
                             </div>
-                            <button onclick="toggleUserRole()" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center">
-                                <i class="fa-solid fa-repeat text-slate-400 mr-2"></i> Switch Role (User/Admin)
-                            </button>
                             <a href="https://t.me/mrpangeranz" target="_blank" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center">
                                 <i class="fa-brands fa-telegram text-sky-500 mr-2"></i> Bantuan Telegram Admin
                             </a>
@@ -158,7 +156,7 @@
             <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-center bg-white shadow-xs text-slate-900 border border-slate-200">
                 <i class="fa-solid fa-gauge-high text-tiktok-rose"></i> Dashboard
             </button>
-            <button onclick="switchTab('admin')" id="mobile-nav-admin" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-center text-slate-600">
+            <button onclick="switchTab('admin')" id="mobile-nav-admin" class="hidden flex-1 py-1.5 text-xs font-semibold rounded-lg text-center text-slate-600">
                 <i class="fa-solid fa-shield-halved text-sky-500"></i> Admin Center
             </button>
         </div>
@@ -184,7 +182,7 @@
                         </div>
                         <h2 class="text-xl font-extrabold tracking-tight">Bot Pemotong Harga Event TikTok (100 Perak)</h2>
                         <p class="text-xs text-slate-300 max-w-2xl">
-                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Sistem secara otomatis akan mensimulasikan bantuan klik menggunakan pool cookie aktif hingga target tercapai.
+                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Estimasi durasi pemotongan adalah <strong>1 Jam</strong> dengan sistem otomatis.
                         </p>
                     </div>
 
@@ -279,8 +277,8 @@
                         <div class="space-y-1">
                             <label class="block text-xs font-semibold text-slate-700">Modus Kecepatan Eksekusi</label>
                             <select id="executionSpeedSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
-                                <option value="normal">Normal Mode (Delay 2.5s - Standard)</option>
-                                <option value="turbo" selected>Turbo Priority (Delay 0.8s - Fast)</option>
+                                <option value="normal">Normal Mode (Durasi 1 Jam - Stable)</option>
+                                <option value="turbo" selected>Turbo Priority (Durasi 1 Jam - High Success)</option>
                             </select>
                         </div>
 
@@ -309,7 +307,7 @@
                         <h3 class="text-sm font-bold text-slate-900 flex items-center">
                             <i class="fa-solid fa-list-check text-sky-500 mr-2"></i> Antrean & Status Tugas Slash
                         </h3>
-                        <p class="text-xs text-slate-500">Pemantauan status eksekusi secara real-time</p>
+                        <p class="text-xs text-slate-500">Pemantauan status eksekusi secara real-time (Durasi Proses 1 Jam)</p>
                     </div>
 
                     <div class="flex items-center space-x-2">
@@ -421,7 +419,7 @@
                 </div>
             </div>
 
-            <!-- License Key Generator Tool (Feature tambahan Admin) -->
+            <!-- License Key Generator Tool -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <h3 class="text-sm font-bold text-slate-900 flex items-center">
@@ -607,7 +605,7 @@
         </div>
     </div>
 
-    <!-- TOP UP CREDITS MODAL WITH QRIS & TELEGRAM CONFIRMATION -->
+    <!-- TOP UP CREDITS MODAL WITH QRIS (Rp 25.000 & Rp 50.000) -->
     <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -619,20 +617,25 @@
                 </button>
             </div>
 
+            <div id="creditDepletedWarning" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-700 font-semibold flex items-center">
+                <i class="fa-solid fa-circle-exclamation text-rose-500 text-base mr-2"></i>
+                <span>Kredit Anda Habis! Silakan lakukan Top Up Kredit untuk melanjutkan eksekusi bot.</span>
+            </div>
+
             <p class="text-xs text-slate-600">
                 Pilih paket isi ulang kredit, lalu scan kode QRIS di bawah ini untuk pembayaran instant:
             </p>
 
-            <!-- Package Selector -->
+            <!-- Package Selector (25rb & 50rb) -->
             <div class="grid grid-cols-2 gap-2">
-                <div onclick="selectTopUpPackage(25, 10000)" class="p-2.5 border rounded-xl cursor-pointer bg-slate-50 hover:bg-rose-50/50 hover:border-tiktok-rose transition-all text-center">
+                <div onclick="selectTopUpPackage(25, 25000)" class="p-3 border rounded-xl cursor-pointer bg-slate-50 hover:bg-rose-50/50 hover:border-tiktok-rose transition-all text-center">
                     <div class="font-bold text-xs text-slate-900">25 Kredit</div>
-                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 10.000</span>
+                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 25.000</span>
                 </div>
 
-                <div onclick="selectTopUpPackage(100, 35000)" class="p-2.5 border-2 border-tiktok-rose rounded-xl cursor-pointer bg-rose-50/40 text-center">
-                    <div class="font-bold text-xs text-slate-900">100 Kredit</div>
-                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 35.000</span>
+                <div onclick="selectTopUpPackage(60, 50000)" class="p-3 border-2 border-tiktok-rose rounded-xl cursor-pointer bg-rose-50/40 text-center">
+                    <div class="font-bold text-xs text-slate-900">60 Kredit (Best)</div>
+                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 50.000</span>
                 </div>
             </div>
 
@@ -642,7 +645,7 @@
                     Scan QRIS All Payment (GoPay, OVO, Dana, BCA, Mandiri)
                 </div>
 
-                <!-- QRIS Image with Fallback Container -->
+                <!-- QRIS Image Container -->
                 <div class="w-48 h-48 mx-auto rounded-xl border border-slate-200 shadow-sm overflow-hidden bg-white p-2 flex items-center justify-center">
                     <img 
                         src="qriss.jpg" 
@@ -653,13 +656,14 @@
                 </div>
 
                 <p class="text-[10px] text-slate-500">
-                    Selesaikan transfer sesuai nominal paket, lalu klik konfirmasi Telegram di bawah ini.
+                    Selesaikan transfer sesuai nominal paket (Rp 25.000 / Rp 50.000), lalu konfirmasi via Telegram.
                 </p>
             </div>
 
             <!-- Confirmation Action -->
             <div class="space-y-2 pt-1">
                 <a 
+                    id="telegramConfirmBtn"
                     href="https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20sudah%20melakukan%20pembayaran%20Top%20Up%20Kredit%20SlashBot%20TikTok.%20Mohon%20diproses." 
                     target="_blank" 
                     class="w-full bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center space-x-2"
@@ -814,11 +818,12 @@
                     current_slashes: 10,
                     max_slashes: 10,
                     status: 'completed',
+                    duration_label: 'Selesai (1 Jam)',
                     logs: [
-                        '[10:14:02] Fetching link parameters...',
-                        '[10:14:03] Session Cookie #1 attached...',
-                        '[10:14:05] Slash #1 successful! Price cut by Rp 1,500',
-                        '[10:14:08] Slash #10 successful! Final target Rp 100 Perak reached!'
+                        '[10:00:00] Memulai antrean proses eksekusi 1 Jam...',
+                        '[10:15:00] Session Cookie #1 terpasang...',
+                        '[10:30:05] Slash #5 berhasil! Pemotongan harga berlangsung.',
+                        '[11:00:00] Slash #10 berhasil! Target Rp 100 Perak tercapai!'
                     ],
                     created_at: new Date(Date.now() - 3600000).toISOString()
                 }
@@ -876,24 +881,9 @@
             const usn = document.getElementById('loginUsername').value.trim().toLowerCase();
             const pwd = document.getElementById('loginPassword').value.trim();
 
-            if (usn === 'admin' && pwd === 'admin123') {
-                const adminUser = appState.usersList.find(u => u.email.toLowerCase() === 'admin') || {
-                    id: 'usr_admin',
-                    email: 'admin',
-                    role: 'admin',
-                    credits: 999
-                };
-                appState.currentUser = adminUser;
-                appState.isAuthenticated = true;
-                saveLocalState();
-                checkAuthAndInit();
-                showToast('Selamat Datang Super Admin!', 'success');
-                return;
-            }
-
             const user = appState.usersList.find(u => 
                 (u.email.toLowerCase() === usn || u.email.split('@')[0].toLowerCase() === usn) && 
-                (u.password === pwd || pwd === '123456' || pwd === 'user123')
+                (u.password === pwd)
             );
 
             if (user) {
@@ -903,7 +893,7 @@
                 checkAuthAndInit();
                 showToast(`Login Berhasil sebagai ${user.email}!`, 'success');
             } else {
-                showToast('Username/Email atau Password salah! (Default Admin: admin / admin123)', 'error');
+                showToast('Username/Email atau Password salah!', 'error');
             }
         }
 
@@ -1015,8 +1005,8 @@
             e.preventDefault();
 
             if (!appState.currentUser || appState.currentUser.credits < 1) {
-                showToast('Saldo kredit Anda habis! Silakan Top Up terlebih dahulu.', 'error');
-                openModal('topUpModal');
+                showToast('Kredit Habis! Silakan Top Up Kredit (Rp 25.000 / Rp 50.000).', 'error');
+                triggerCreditDepletedTopUp();
                 return;
             }
 
@@ -1052,12 +1042,20 @@
                             createNewTask(url, parsed, speed, targetSlashes);
                             countCreated++;
                         }
+                    } else {
+                        triggerCreditDepletedTopUp();
                     }
                 });
 
                 document.getElementById('tiktokBatchUrlsInput').value = '';
-                showToast(`Berhasil menambahkan ${countCreated} tugas batch sekaligus!`, 'success');
+                showToast(`Berhasil menambahkan ${countCreated} tugas batch!`, 'success');
             }
+        }
+
+        function triggerCreditDepletedTopUp() {
+            const warningEl = document.getElementById('creditDepletedWarning');
+            if (warningEl) warningEl.classList.remove('hidden');
+            openModal('topUpModal');
         }
 
         function createNewTask(url, parsed, speed, targetSlashes) {
@@ -1072,9 +1070,10 @@
                 current_slashes: 0,
                 max_slashes: targetSlashes,
                 status: 'processing',
+                duration_label: 'Proses 1 Jam',
                 logs: [
-                    `[${new Date().toLocaleTimeString()}] Task Created. Deducted 1 Credit.`,
-                    `[${new Date().toLocaleTimeString()}] Initializing connection to TikTok Event Gate...`
+                    `[${new Date().toLocaleTimeString()}] Task Dibuat. Kredit berkurang 1.`,
+                    `[${new Date().toLocaleTimeString()}] Menginisialisasi proses eksekusi 1 Jam ke server TikTok...`
                 ],
                 created_at: new Date().toISOString()
             };
@@ -1084,6 +1083,10 @@
             renderHeaderUI();
             renderTasksList();
             runTaskExecutionEngine(newTask.id);
+
+            if (appState.currentUser.credits === 0) {
+                showToast('Kredit Anda sekarang 0. Silakan isi ulang kredit.', 'warning');
+            }
         }
 
         function resumePendingTasks() {
@@ -1098,7 +1101,8 @@
             const task = appState.tasks.find(t => t.id === taskId);
             if (!task || task.status !== 'processing') return;
 
-            const delayMs = task.speed === 'turbo' ? 1200 : 2500;
+            // Simulated 1-Hour processing execution timeline interval
+            const intervalMs = task.speed === 'turbo' ? 2000 : 4000;
 
             const interval = setInterval(() => {
                 const currentTask = appState.tasks.find(t => t.id === taskId);
@@ -1114,18 +1118,19 @@
                     const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
                     
                     const timestamp = new Date().toLocaleTimeString();
-                    const logMsg = `[${timestamp}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUCCESS! Price cut by Rp ${Math.floor(Math.random() * 2000 + 500)}`;
+                    const logMsg = `[${timestamp}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Harga terpotong Rp ${Math.floor(Math.random() * 2000 + 500)}`;
                     
                     currentTask.logs.push(logMsg);
                     appendTerminalLog(logMsg);
 
                     if (currentTask.current_slashes >= currentTask.max_slashes) {
                         currentTask.status = 'completed';
-                        const finalLog = `[${new Date().toLocaleTimeString()}] Event Price Slash COMPLETED! Final Target Rp 100 Reached.`;
+                        currentTask.duration_label = 'Selesai (1 Jam)';
+                        const finalLog = `[${new Date().toLocaleTimeString()}] Eksekusi 1 Jam Selesai! Target Rp 100 Perak Tercapai.`;
                         currentTask.logs.push(finalLog);
                         appendTerminalLog(finalLog);
                         clearInterval(interval);
-                        showToast(`Task ${currentTask.id} Selesai! Target Rp 100 Perak tercapai.`, 'success');
+                        showToast(`Tugas ${currentTask.id} Selesai dalam 1 Jam! Target Rp 100 Perak tercapai.`, 'success');
                     }
 
                     saveLocalState();
@@ -1133,7 +1138,7 @@
                 } else {
                     clearInterval(interval);
                 }
-            }, delayMs);
+            }, intervalMs);
         }
 
         function togglePauseTask(taskId) {
@@ -1145,7 +1150,7 @@
                 showToast('Tugas di-pause', 'info');
             } else if (task.status === 'pending') {
                 task.status = 'processing';
-                showToast('Tugas dilanjutkan...', 'info');
+                showToast('Tugas dilanjutkan (Proses 1 Jam)...', 'info');
                 runTaskExecutionEngine(taskId);
             }
             saveLocalState();
@@ -1156,13 +1161,19 @@
             const task = appState.tasks.find(t => t.id === taskId);
             if (!task) return;
 
+            if (appState.currentUser.credits < 1) {
+                showToast('Kredit Habis! Silakan Top Up Kredit (Rp 25.000 / Rp 50.000)', 'error');
+                triggerCreditDepletedTopUp();
+                return;
+            }
+
             task.status = 'processing';
             task.current_slashes = 0;
-            task.logs.push(`[${new Date().toLocaleTimeString()}] Manual Retry Triggered.`);
+            task.logs.push(`[${new Date().toLocaleTimeString()}] Retry Manual Dicuci. Memulai ulang proses 1 Jam.`);
             saveLocalState();
             renderTasksList();
             runTaskExecutionEngine(taskId);
-            showToast('Memulai ulang tugas...', 'info');
+            showToast('Memulai ulang proses 1 Jam...', 'info');
         }
 
         function deleteTask(taskId) {
@@ -1223,9 +1234,9 @@
                 
                 let statusBadge = '';
                 if (task.status === 'processing') {
-                    statusBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg animate-pulse flex items-center"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> PROCESSING</span>`;
+                    statusBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg animate-pulse flex items-center"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> PROSES 1 JAM (${percent}%)</span>`;
                 } else if (task.status === 'completed') {
-                    statusBadge = `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-check mr-1.5"></i> COMPLETED</span>`;
+                    statusBadge = `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-check mr-1.5"></i> SELESAI (1 JAM)</span>`;
                 } else if (task.status === 'pending') {
                     statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-pause mr-1.5"></i> PAUSED</span>`;
                 } else {
@@ -1265,7 +1276,7 @@
 
                         <div class="space-y-1">
                             <div class="flex justify-between text-xs font-semibold">
-                                <span class="text-slate-600">Eksekusi Slash: <strong class="text-slate-900">${task.current_slashes} / ${task.max_slashes}</strong></span>
+                                <span class="text-slate-600">Proses Pemotongan: <strong class="text-slate-900">${task.current_slashes} / ${task.max_slashes} Slash</strong></span>
                                 <span class="text-tiktok-rose font-bold">${percent}%</span>
                             </div>
                             <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -1526,28 +1537,20 @@
             document.getElementById('userRoleText').innerText = `Role: ${appState.currentUser.role}`;
             document.getElementById('userAvatarText').innerText = appState.currentUser.email.substring(0,2).toUpperCase();
 
-            const adminBadge = document.getElementById('adminBadge');
-            if (adminBadge) {
-                if (appState.currentUser.role !== 'admin') {
-                    adminBadge.innerText = 'USER';
-                    adminBadge.className = 'ml-1 px-1.5 py-0.5 text-[9px] bg-slate-200 text-slate-700 font-bold rounded-full';
-                } else {
-                    adminBadge.innerText = 'ADMIN';
-                    adminBadge.className = 'ml-1 px-1.5 py-0.5 text-[9px] bg-sky-100 text-sky-700 font-bold rounded-full';
+            // Sembunyikan Admin Center sepenuhnya jika role pengguna adalah 'user'
+            const navAdmin = document.getElementById('nav-admin');
+            const mobileNavAdmin = document.getElementById('mobile-nav-admin');
+
+            if (appState.currentUser.role === 'admin') {
+                if (navAdmin) navAdmin.classList.remove('hidden');
+                if (mobileNavAdmin) mobileNavAdmin.classList.remove('hidden');
+            } else {
+                if (navAdmin) navAdmin.classList.add('hidden');
+                if (mobileNavAdmin) mobileNavAdmin.classList.add('hidden');
+                if (appState.activeTab === 'admin') {
+                    switchTab('dashboard');
                 }
             }
-        }
-
-        function toggleUserRole() {
-            if (!appState.currentUser) return;
-            appState.currentUser.role = appState.currentUser.role === 'admin' ? 'user' : 'admin';
-            saveLocalState();
-            renderHeaderUI();
-            
-            if (appState.currentUser.role !== 'admin' && appState.activeTab === 'admin') {
-                switchTab('dashboard');
-            }
-            showToast(`Role diubah menjadi: ${appState.currentUser.role.toUpperCase()}`, 'info');
         }
 
         function switchTab(tabName) {
@@ -1567,11 +1570,11 @@
                 dashTab.classList.remove('hidden');
                 adminTab.classList.add('hidden');
                 navDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm";
-                navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
+                if (navAdmin) navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
             } else {
                 dashTab.classList.add('hidden');
                 adminTab.classList.remove('hidden');
-                navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm";
+                if (navAdmin) navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm";
                 navDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
             }
         }
@@ -1596,6 +1599,10 @@
         }
 
         function selectTopUpPackage(credits, price) {
+            const telegramLink = `https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20ingin%20Top%20Up%20Paket%20${credits}%20Kredit%20Slash%20(Rp%20${price.toLocaleString('id-ID')}).%20Mohon%20diproses.`;
+            const btn = document.getElementById('telegramConfirmBtn');
+            if (btn) btn.href = telegramLink;
+            
             showToast(`Paket ${credits} Kredit (Rp ${price.toLocaleString('id-ID')}) dipilih. Silakan scan QRIS.`, 'info');
         }
 
@@ -1619,6 +1626,9 @@
             } else if (type === 'error') {
                 bgClass = 'bg-rose-900 text-rose-100 border border-rose-700';
                 icon = 'fa-triangle-exclamation text-rose-400';
+            } else if (type === 'warning') {
+                bgClass = 'bg-amber-900 text-amber-100 border border-amber-700';
+                icon = 'fa-triangle-exclamation text-amber-400';
             }
 
             toast.className = `pointer-events-auto flex items-center space-x-2 px-4 py-3 rounded-xl shadow-xl text-xs font-semibold ${bgClass} transition-all transform translate-y-2 opacity-0`;
