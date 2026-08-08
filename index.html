@@ -95,16 +95,16 @@
                     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm">
                         <i class="fa-solid fa-gauge-high mr-1.5 text-tiktok-rose"></i> Dashboard
                     </button>
-                    <!-- Admin Tab (Hanya tampil jika Role == Admin) -->
+                    <!-- Admin Tab (Hanya muncul jika Role == Admin) -->
                     <button onclick="switchTab('admin')" id="nav-admin" class="hidden px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
                         <i class="fa-solid fa-shield-halved mr-1.5 text-sky-500"></i> Admin Center
                         <span id="adminBadge" class="ml-1 px-1.5 py-0.5 text-[9px] bg-sky-100 text-sky-700 font-bold rounded-full">ADMIN</span>
                     </button>
                 </nav>
 
-                <!-- Right Side User Actions, License & Credits -->
+                <!-- Right Side User Actions & Credits -->
                 <div class="flex items-center space-x-3">
-                    <!-- License Badge Indicator -->
+                    <!-- License Badge -->
                     <div class="hidden sm:flex items-center bg-rose-50 border border-rose-200 rounded-xl px-2.5 py-1.5">
                         <i class="fa-solid fa-key text-tiktok-rose text-xs mr-1.5"></i>
                         <span id="licenseBadgeDisplay" class="text-xs font-bold text-tiktok-rose">Lisensi: Aktif (30 Hari)</span>
@@ -428,26 +428,6 @@
                 </div>
             </div>
 
-            <!-- License Key Generator Tool -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                    <h3 class="text-sm font-bold text-slate-900 flex items-center">
-                        <i class="fa-solid fa-key text-amber-500 mr-2"></i> Generator Kunci Lisensi Pengguna
-                    </h3>
-                    <span class="text-xs text-slate-500">Buat serial key lisensi untuk pembeli</span>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi Paket Lisensi</label>
-                        <select id="genLicenseDuration" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
-                            <option value="30">1 Bulan (30 Hari)</option>
-                            <option value="60">2 Bulan (60 Hari)</option>
-                            <option value="365">1 Tahun (365 Hari)</option>
-                        </select>
-                    </div>
-                    <div>
-            <!-- License Key Generator & Active Keys Table -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <h3 class="text-sm font-bold text-slate-900 flex items-center">
@@ -479,7 +459,6 @@
                     </div>
                 </div>
 
-                <!-- Table Active Generated Licenses -->
                 <div class="overflow-x-auto pt-2">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
@@ -491,9 +470,44 @@
                                 <th class="py-2.5 px-3 font-bold text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="licenseTableBody" class="divide-y divide-slate-100 font-medium">
-                            <!-- Dynamically injected -->
-                        </tbody>
+                        <tbody id="licenseTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cookie Manager Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                            <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> TikTok Cookie & Session Pool Manager
+                        </h3>
+                        <p class="text-xs text-slate-500">Kelola akun bot pengisi saldo slash event TikTok</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="triggerCookieHealthCheck()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+                            <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Check Cookie Health
+                        </button>
+                        <button onclick="openModal('addCookieModal')" class="px-3 py-1.5 bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
+                            <i class="fa-solid fa-plus mr-1"></i> Tambah Cookie
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="py-3 px-4 font-bold">Account Label</th>
+                                <th class="py-3 px-4 font-bold">Session Preview</th>
+                                <th class="py-3 px-4 font-bold">Status Health</th>
+                                <th class="py-3 px-4 font-bold">Slashes Executed</th>
+                                <th class="py-3 px-4 font-bold">Terakhir Dipakai</th>
+                                <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cookieTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
                     </table>
                 </div>
             </div>
@@ -538,7 +552,6 @@
     <div id="loginModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-slate-100 space-y-6 my-8">
             <div class="text-center space-y-2">
-                <!-- TikTok Logo Image Header -->
                 <div class="w-16 h-16 rounded-2xl overflow-hidden border border-slate-200 shadow-md mx-auto flex items-center justify-center bg-slate-900">
                     <img 
                         src="logo.jpg" 
@@ -570,7 +583,7 @@
 
             <div class="border-t border-slate-200 my-4"></div>
 
-            <!-- BUY LICENSE SECTION ON LOGIN PAGE -->
+            <!-- Buy License Section -->
             <div class="space-y-3">
                 <div class="text-center">
                     <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-center">
@@ -579,7 +592,6 @@
                     <p class="text-[11px] text-slate-500">Belum punya lisensi? Pilih paket lisensi bot di bawah untuk pendaftaran akun baru:</p>
                 </div>
 
-                <!-- License Pricing Cards -->
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-center space-y-2 hover:border-tiktok-rose transition-all">
                         <div class="text-xs font-bold text-slate-800">1 Bulan</div>
@@ -614,7 +626,7 @@
         </div>
     </div>
 
-    <!-- TOP UP CREDITS MODAL WITH QRIS (Rp 25.000 & Rp 50.000) -->
+    <!-- TOP UP CREDITS MODAL WITH QRIS -->
     <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
         <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -635,7 +647,6 @@
                 Pilih paket isi ulang kredit, lalu scan kode QRIS di bawah ini untuk pembayaran instant:
             </p>
 
-            <!-- Package Selector (25rb & 50rb) -->
             <div class="grid grid-cols-2 gap-2">
                 <div onclick="selectTopUpPackage(25, 25000)" class="p-3 border rounded-xl cursor-pointer bg-slate-50 hover:bg-rose-50/50 hover:border-tiktok-rose transition-all text-center">
                     <div class="font-bold text-xs text-slate-900">25 Kredit</div>
@@ -648,13 +659,11 @@
                 </div>
             </div>
 
-            <!-- QRIS Image Box -->
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-2">
                 <div class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wide">
                     Scan QRIS All Payment (GoPay, OVO, Dana, BCA, Mandiri)
                 </div>
 
-                <!-- QRIS Image Container -->
                 <div class="w-48 h-48 mx-auto rounded-xl border border-slate-200 shadow-sm overflow-hidden bg-white p-2 flex items-center justify-center">
                     <img 
                         src="qriss.jpg" 
@@ -669,7 +678,6 @@
                 </p>
             </div>
 
-            <!-- Confirmation Action -->
             <div class="space-y-2 pt-1">
                 <a 
                     id="telegramConfirmBtn"
@@ -733,7 +741,7 @@
         </div>
     </div>
 
-    <!-- Add Cookie Modal -->
+    <!-- ADD COOKIE MODAL -->
     <div id="addCookieModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -764,7 +772,7 @@
         </div>
     </div>
 
-    <!-- Edit User Modal -->
+    <!-- EDIT USER MODAL -->
     <div id="editUserCreditModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
@@ -806,6 +814,8 @@
     <script>
         const SUPABASE_URL = 'https://qnebllubovusmcfjlmcu.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_G_aHv4ERnqDRuxLtSb9JwQ_oWIjfckw';
+
+        let supabaseClient = null;
 
         let appState = {
             isAuthenticated: false,
@@ -859,8 +869,6 @@
             taskFilter: 'all'
         };
 
-        let supabaseClient = null;
-
         function initSupabaseClient() {
             if (typeof window.supabase !== 'undefined' && SUPABASE_URL && SUPABASE_ANON_KEY) {
                 try {
@@ -881,7 +889,6 @@
                 return;
             }
 
-            // Match account against user list
             const matchedUser = appState.usersList.find(
                 u => (u.email.toLowerCase() === usernameInput.toLowerCase() || u.id === usernameInput) && u.password === passwordInput
             );
@@ -907,6 +914,92 @@
             checkAuthAndInit();
         }
 
+        function checkAuthAndInit() {
+            if (!appState.isAuthenticated || !appState.currentUser) {
+                openModal('loginModal');
+            } else {
+                closeModal('loginModal');
+                renderHeaderUI();
+                renderTasksList();
+                renderCookieTable();
+                renderUsersTable();
+                renderLicensesTable();
+                updateAdminStats();
+            }
+        }
+
+        function parseTikTokUrl(urlStr) {
+            if (!urlStr || typeof urlStr !== 'string') return null;
+            let trimmed = urlStr.trim();
+            if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+                trimmed = 'https://' + trimmed;
+            }
+            if (!trimmed.includes('tiktok.com')) return null;
+
+            try {
+                let urlObj = new URL(trimmed);
+                let params = {};
+                urlObj.searchParams.forEach((value, key) => {
+                    if (['item_id', 'campaign_id', 'share_user_id', 'enter_from', 'u_code'].includes(key)) {
+                        params[key] = value;
+                    }
+                });
+
+                if (Object.keys(params).length === 0) {
+                    let pathHash = trimmed.split('/').pop() || 'ZSN3x8Y1A';
+                    params = {
+                        item_id: '7' + Math.floor(Math.random() * 899999999 + 100000000),
+                        campaign_id: 'cmp_slash_100',
+                        share_user_id: 'usr_' + pathHash.substring(0, 6),
+                        enter_from: 'event_price_slash'
+                    };
+                }
+                return params;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function liveParseUrl() {
+            const inputVal = document.getElementById('tiktokUrlInput').value;
+            const previewBox = document.getElementById('sanitizerPreviewBox');
+            const container = document.getElementById('parsedParamsContainer');
+
+            if (!inputVal) {
+                previewBox.classList.add('hidden');
+                return;
+            }
+
+            const parsed = parseTikTokUrl(inputVal);
+            if (parsed) {
+                previewBox.classList.remove('hidden');
+                container.innerHTML = Object.entries(parsed).map(([key, val]) => `
+                    <span class="inline-flex items-center bg-white px-2 py-1 rounded border border-slate-200 text-slate-700">
+                        <strong class="text-tiktok-rose mr-1">${key}:</strong> ${val}
+                    </span>
+                `).join('');
+            } else {
+                previewBox.classList.remove('hidden');
+                container.innerHTML = `<span class="text-rose-600 font-sans text-xs">Format URL TikTok tidak valid. Pastikan terdapat domain tiktok.com</span>`;
+            }
+        }
+
+        function clearUrlInput() {
+            document.getElementById('tiktokUrlInput').value = '';
+            document.getElementById('sanitizerPreviewBox').classList.add('hidden');
+        }
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('tiktokUrlInput').value = text;
+                liveParseUrl();
+                showToast('Link berhasil ditempel dari Clipboard!', 'success');
+            } catch (err) {
+                showToast('Gagal mengakses clipboard. Silakan paste manual.', 'warning');
+            }
+        }
+
         function setFormMode(mode) {
             appState.formMode = mode;
             const singleContainer = document.getElementById('singleLinkContainer');
@@ -927,30 +1020,54 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            initSupabaseClient();
-            loadLocalState();
-            checkAuthAndInit();
-            renderLicensesTable();
-            resumePendingTasks();
-        });
+        function handleTaskSubmit(e) {
+            e.preventDefault();
 
-        function checkAuthAndInit() {
-            if (!appState.isAuthenticated || !appState.currentUser) {
-                openModal('loginModal');
-            } else {
-                closeModal('loginModal');
-                renderHeaderUI();
-                renderTasksList();
-                renderCookieTable();
-                renderUsersTable();
-                renderLicensesTable();
-                updateAdminStats();
+            if (!appState.currentUser || appState.currentUser.credits < 1) {
+                triggerCreditDepletedTopUp();
+                return;
             }
+
+            const speed = document.getElementById('executionSpeedSelect').value;
+            const targetSlashes = parseInt(document.getElementById('targetSlashesSelect').value);
+
+            if (appState.formMode === 'single') {
+                const urlInput = document.getElementById('tiktokUrlInput').value;
+                const parsed = parseTikTokUrl(urlInput);
+
+                if (!parsed) {
+                    showToast('URL TikTok tidak dapat diverifikasi! Periksa kembali format link.', 'error');
+                    playAudioBeep('error');
+                    return;
+                }
+
+                createNewTask(urlInput, parsed, speed, targetSlashes);
+                clearUrlInput();
+            } else {
+                const batchText = document.getElementById('tiktokBatchUrlsInput').value.trim();
+                const lines = batchText.split('\n').filter(l => l.trim().length > 0);
+
+                if (lines.length === 0) {
+                    showToast('Masukkan minimal 1 link TikTok pada mode batch!', 'error');
+                    return;
+                }
+
+                lines.forEach(line => {
+                    const parsed = parseTikTokUrl(line);
+                    if (parsed && appState.currentUser.credits >= 1) {
+                        createNewTask(line, parsed, speed, targetSlashes);
+                    }
+                });
+
+                document.getElementById('tiktokBatchUrlsInput').value = '';
+            }
+
+            showToast('Tugas Slash Berhasil Dimulai!', 'success');
+            playAudioBeep('success');
         }
 
         function createNewTask(url, parsed, speed, targetSlashes) {
-            // Potong kredit pengguna menjadi sisa 5 kredit
+            // Kurangi saldo kredit pengguna
             if (appState.currentUser.credits >= 20) {
                 appState.currentUser.credits -= 20;
             } else {
@@ -986,7 +1103,6 @@
             renderTasksList();
             runTaskExecutionEngine(newTask.id);
 
-            // Tampilkan modal Top Up jika kredit sisa <= 5
             if (appState.currentUser.credits <= 5) {
                 showToast('Kredit Anda sisa 5! Silakan Top Up kredit terlebih dahulu untuk melanjutkan eksekusi.', 'warning');
                 playAudioBeep('warning');
@@ -1000,7 +1116,6 @@
             const task = appState.tasks.find(t => t.id === taskId);
             if (!task || task.status !== 'processing') return;
 
-            // Mencegah duplicate interval jika sudah berjalan
             if (task._timerIntervalId) {
                 clearInterval(task._timerIntervalId);
             }
@@ -1025,15 +1140,12 @@
                 const secs = remainingSec % 60;
                 currentTask.countdown_display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-                // Calculate slashes progress proportionally across 1 hour
                 const progressRatio = Math.min(1, elapsedSec / TOTAL_DURATION_SEC);
                 currentTask.current_slashes = Math.min(currentTask.max_slashes, Math.floor(progressRatio * currentTask.max_slashes));
                 
-                // Dynamic Current Price Calculation (Rp 150.000 -> Rp 100 Perak)
                 const priceDropAmount = Math.floor(progressRatio * (currentTask.initial_price - currentTask.target_price));
                 currentTask.current_price = Math.max(currentTask.target_price, currentTask.initial_price - priceDropAmount);
 
-                // Log periodik setiap 6 menit (360 detik)
                 if (elapsedSec > 0 && elapsedSec % 360 === 0 && currentTask.current_slashes > (currentTask.last_logged_slash || 0)) {
                     currentTask.last_logged_slash = currentTask.current_slashes;
                     const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
@@ -1043,7 +1155,6 @@
                     appendTerminalLog(logMsg);
                 }
 
-                // Saat 1 Jam Selesai
                 if (elapsedSec >= TOTAL_DURATION_SEC) {
                     currentTask.status = 'completed';
                     currentTask.current_slashes = currentTask.max_slashes;
@@ -1062,7 +1173,7 @@
 
                 saveLocalState();
                 renderTasksList();
-            }, 1000); // Tepat 1 Detik per interval
+            }, 1000);
         }
 
         function resumePendingTasks() {
@@ -1073,86 +1184,70 @@
             }
         }
 
-        function playAudioBeep(type = 'success') {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
+        function togglePauseTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
 
-                if (type === 'success') {
-                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
-                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.3);
-                } else {
-                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                    osc.start();
-                    osc.stop(audioCtx.currentTime + 0.4);
-                }
-            } catch(e) {}
+            if (task.status === 'processing') {
+                task.status = 'pending';
+                if (task._timerIntervalId) clearInterval(task._timerIntervalId);
+                showToast('Tugas di-pause', 'info');
+            } else if (task.status === 'pending') {
+                task.status = 'processing';
+                showToast('Tugas dilanjutkan...', 'info');
+                runTaskExecutionEngine(taskId);
+            }
+            saveLocalState();
+            renderTasksList();
         }
 
-        function generateLicenseKey() {
-            const duration = document.getElementById('genLicenseDuration').value;
-            const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
-            const key = `SLASH-${duration}D-${randomCode}`;
-            document.getElementById('genLicenseResult').value = key;
+        function retryTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
 
-            if (!Array.isArray(appState.generatedLicenses)) appState.generatedLicenses = [];
-            
-            appState.generatedLicenses.unshift({
-                key: key,
-                duration: `${duration} Hari`,
-                status: 'Unclaimed',
-                created_at: new Date().toISOString().split('T')[0]
+            task.status = 'processing';
+            task.current_slashes = 0;
+            task.created_at = new Date().toISOString();
+            task.logs.push(`[${new Date().toLocaleTimeString()}] Manual Retry Triggered.`);
+            saveLocalState();
+            renderTasksList();
+            runTaskExecutionEngine(taskId);
+            showToast('Memulai ulang tugas...', 'info');
+        }
+
+        function deleteTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (task && task._timerIntervalId) clearInterval(task._timerIntervalId);
+            appState.tasks = appState.tasks.filter(t => t.id !== taskId);
+            saveLocalState();
+            renderTasksList();
+            showToast('Tugas berhasil dihapus', 'info');
+        }
+
+        function exportTaskReportCSV(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Log Description\n";
+            task.logs.forEach(log => {
+                csvContent += `"${log.substring(0,10)}","${log.replace(/"/g, '""')}"\n`;
             });
 
-            saveLocalState();
-            renderLicensesTable();
-            showToast('License Key berhasil dibuat!', 'success');
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `slash_report_${taskId}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Laporan CSV berhasil diunduh', 'success');
         }
 
-        function renderLicensesTable() {
-            const tbody = document.getElementById('licenseTableBody');
-            if (!tbody) return;
-
-            const licenses = Array.isArray(appState.generatedLicenses) ? appState.generatedLicenses : [];
-            if (licenses.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-3 text-center text-slate-400">Belum ada lisensi yang dibuat.</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = licenses.map(l => `
-                <tr class="hover:bg-slate-50">
-                    <td class="py-2.5 px-3 font-mono font-bold text-tiktok-rose">${l.key}</td>
-                    <td class="py-2.5 px-3 font-semibold">${l.duration}</td>
-                    <td class="py-2.5 px-3">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${l.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                            ${l.status}
-                        </span>
-                    </td>
-                    <td class="py-2.5 px-3 text-slate-500">${l.created_at}</td>
-                    <td class="py-2.5 px-3 text-right space-x-1">
-                        <button onclick="navigator.clipboard.writeText('${l.key}'); showToast('Key disalin!','success');" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs">
-                            <i class="fa-regular fa-copy"></i>
-                        </button>
-                        <button onclick="deleteLicenseKey('${l.key}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded text-xs">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function deleteLicenseKey(key) {
-            appState.generatedLicenses = appState.generatedLicenses.filter(l => l.key !== key);
+        function clearCompletedTasks() {
+            appState.tasks = appState.tasks.filter(t => t.status !== 'completed');
             saveLocalState();
-            renderLicensesTable();
-            showToast('Lisensi dihapus.', 'info');
+            renderTasksList();
+            showToast('Tugas selesai telah dibersihkan', 'info');
         }
 
         function renderTasksList() {
@@ -1260,35 +1355,23 @@
             }).join('');
         }
 
-        function appendTerminalLog(msg) {
-            const consoleEl = document.getElementById('terminalConsole');
-            if (!consoleEl) return;
-            const newDiv = document.createElement('div');
-            newDiv.textContent = msg;
-            consoleEl.appendChild(newDiv);
-            consoleEl.scrollTop = consoleEl.scrollHeight;
-        }
-
-        function clearTerminalLogs() {
-            const consoleEl = document.getElementById('terminalConsole');
-            if (consoleEl) {
-                consoleEl.innerHTML = `<div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized.</div>`;
-            }
-        }
-
-        function copyTerminalLogs() {
-            const consoleEl = document.getElementById('terminalConsole');
-            if (consoleEl) {
-                navigator.clipboard.writeText(consoleEl.innerText);
-                showToast('Log terminal berhasil disalin!', 'success');
-            }
-        }
-
         function generateLicenseKey() {
             const duration = document.getElementById('genLicenseDuration').value;
             const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
             const key = `SLASH-${duration}D-${randomCode}`;
             document.getElementById('genLicenseResult').value = key;
+
+            if (!Array.isArray(appState.generatedLicenses)) appState.generatedLicenses = [];
+            
+            appState.generatedLicenses.unshift({
+                key: key,
+                duration: `${duration} Hari`,
+                status: 'Unclaimed',
+                created_at: new Date().toISOString().split('T')[0]
+            });
+
+            saveLocalState();
+            renderLicensesTable();
             showToast('License Key berhasil dibuat!', 'success');
         }
 
@@ -1300,6 +1383,45 @@
             } else {
                 showToast('Klik Buat Key terlebih dahulu.', 'warning');
             }
+        }
+
+        function renderLicensesTable() {
+            const tbody = document.getElementById('licenseTableBody');
+            if (!tbody) return;
+
+            const licenses = Array.isArray(appState.generatedLicenses) ? appState.generatedLicenses : [];
+            if (licenses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-3 text-center text-slate-400">Belum ada lisensi yang dibuat.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = licenses.map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-mono font-bold text-tiktok-rose">${l.key}</td>
+                    <td class="py-2.5 px-3 font-semibold">${l.duration}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${l.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${l.status}
+                        </span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-500">${l.created_at}</td>
+                    <td class="py-2.5 px-3 text-right space-x-1">
+                        <button onclick="navigator.clipboard.writeText('${l.key}'); showToast('Key disalin!','success');" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                        <button onclick="deleteLicenseKey('${l.key}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteLicenseKey(key) {
+            appState.generatedLicenses = appState.generatedLicenses.filter(l => l.key !== key);
+            saveLocalState();
+            renderLicensesTable();
+            showToast('Lisensi dihapus.', 'info');
         }
 
         function renderCookieTable() {
@@ -1500,7 +1622,6 @@
             document.getElementById('userRoleText').innerText = `Role: ${appState.currentUser.role}`;
             document.getElementById('userAvatarText').innerText = appState.currentUser.email.substring(0,2).toUpperCase();
 
-            // Sembunyikan Admin Center sepenuhnya jika role pengguna adalah 'user'
             const navAdmin = document.getElementById('nav-admin');
             const mobileNavAdmin = document.getElementById('mobile-nav-admin');
 
@@ -1561,6 +1682,12 @@
             if (el) el.classList.add('hidden');
         }
 
+        function triggerCreditDepletedTopUp() {
+            const warningEl = document.getElementById('creditDepletedWarning');
+            if (warningEl) warningEl.classList.remove('hidden');
+            openModal('topUpModal');
+        }
+
         function selectTopUpPackage(credits, price) {
             const telegramLink = `https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20ingin%20Top%20Up%20Paket%20${credits}%20Kredit%20Slash%20(Rp%20${price.toLocaleString('id-ID')}).%20Mohon%20diproses.`;
             const btn = document.getElementById('telegramConfirmBtn');
@@ -1574,12 +1701,58 @@
             showToast('Silakan selesaikan pembayaran lalu konfirmasi ke Telegram Admin @mrpangeranz', 'info');
         }
 
+        function appendTerminalLog(msg) {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (!consoleEl) return;
+            const newDiv = document.createElement('div');
+            newDiv.textContent = msg;
+            consoleEl.appendChild(newDiv);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function clearTerminalLogs() {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (consoleEl) {
+                consoleEl.innerHTML = `<div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized.</div>`;
+            }
+        }
+
+        function copyTerminalLogs() {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (consoleEl) {
+                navigator.clipboard.writeText(consoleEl.innerText);
+                showToast('Log terminal berhasil disalin!', 'success');
+            }
+        }
+
+        function playAudioBeep(type = 'success') {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
+                } else {
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
+                }
+            } catch(e) {}
+        }
+
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
             if (!container) return;
 
             const toast = document.createElement('div');
-            
             let bgClass = 'bg-slate-900 text-white';
             let icon = 'fa-circle-info text-sky-400';
 
@@ -1624,9 +1797,18 @@
                     appState.tasks = parsed.tasks || appState.tasks;
                     appState.cookiePool = parsed.cookiePool || appState.cookiePool;
                     appState.usersList = parsed.usersList || appState.usersList;
+                    appState.generatedLicenses = parsed.generatedLicenses || appState.generatedLicenses;
                 } catch(e) {}
             }
         }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSupabaseClient();
+            loadLocalState();
+            checkAuthAndInit();
+            renderLicensesTable();
+            resumePendingTasks();
+        });
     </script>
 </body>
 </html>
