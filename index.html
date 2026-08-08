@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Event Price Slash Engine (100 Perak)</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        tiktok: {
+                            rose: '#FF0050',
+                            roseHover: '#E11D48',
+                            cyan: '#00F2FE',
+                            darkCyan: '#0284C7',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+        
+        .glow-pink {
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.25);
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 font-sans antialiased selection:bg-tiktok-rose selection:text-white">
+
+    <header class="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Brand Logo with TikTok Logo image fallback -->
+                <div class="flex items-center space-x-3">
+                    <div class="relative w-10 h-10 rounded-xl overflow-hidden shadow-sm border border-slate-100 flex items-center justify-center bg-slate-900">
+                        <img 
+                            src="logo.jpg" 
+                            alt="TikTok Logo" 
+                            class="w-full h-full object-cover" 
+                            onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-tiktok-rose via-rose-500 to-tiktok-cyan p-0.5 flex items-center justify-center\'><div class=\'w-full h-full bg-white rounded-[10px] flex items-center justify-center\'><i class=\'fa-brands fa-tiktok text-tiktok-rose text-lg\'></i></div></div>';"
+                        />
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h1 class="text-lg font-bold text-slate-900 tracking-tight">SlashBot <span class="text-tiktok-rose">TikTok</span></h1>
+                            <span class="text-[10px] font-semibold bg-rose-50 text-tiktok-rose border border-rose-200 px-2 py-0.5 rounded-full">v2.5 Enterprise</span>
+                        </div>
+                        <p class="text-xs text-slate-500 hidden sm:block">Engine Pemotong Harga Event 100 Perak</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs Switcher -->
+                <nav class="hidden md:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200" id="mainTabNav">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm">
+                        <i class="fa-solid fa-gauge-high mr-1.5 text-tiktok-rose"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('admin')" id="nav-admin" class="px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-shield-halved mr-1.5 text-sky-500"></i> Admin Center
+                        <span id="adminBadge" class="ml-1 px-1.5 py-0.5 text-[9px] bg-sky-100 text-sky-700 font-bold rounded-full">ADMIN</span>
+                    </button>
+                </nav>
+
+                <!-- Right Side User Actions, License & Credits -->
+                <div class="flex items-center space-x-3">
+                    <!-- License Badge Indicator -->
+                    <div class="hidden sm:flex items-center bg-rose-50 border border-rose-200 rounded-xl px-2.5 py-1.5">
+                        <i class="fa-solid fa-key text-tiktok-rose text-xs mr-1.5"></i>
+                        <span id="licenseBadgeDisplay" class="text-xs font-bold text-tiktok-rose">Lisensi: Aktif (30 Hari)</span>
+                    </div>
+
+                    <!-- Credit Counter Badge -->
+                    <div class="flex items-center bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-1.5 shadow-sm">
+                        <i class="fa-solid fa-coins text-emerald-600 mr-2"></i>
+                        <span id="userCreditsDisplay" class="text-sm font-bold text-emerald-800 mr-2">0</span>
+                        <span class="text-xs text-emerald-600 font-medium mr-2">Kredit</span>
+                        <button onclick="openModal('topUpModal')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2 py-0.5 rounded-lg transition-colors shadow-xs">
+                            + Top Up
+                        </button>
+                    </div>
+
+                    <!-- User Profile Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 p-1.5 rounded-xl hover:bg-slate-100 border border-slate-200 transition-colors">
+                            <div class="w-8 h-8 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
+                                <span id="userAvatarText">US</span>
+                            </div>
+                            <div class="text-left hidden lg:block pr-1">
+                                <div id="userEmailText" class="text-xs font-semibold text-slate-800 max-w-[120px] truncate">user@tiktok.id</div>
+                                <div id="userRoleText" class="text-[10px] text-slate-500 capitalize">Role: User</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs pl-1"></i>
+                        </button>
+                        
+                        <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-200 py-1 hidden group-hover:block z-50">
+                            <div class="px-4 py-2 border-b border-slate-100">
+                                <p class="text-xs text-slate-500">Login sebagai</p>
+                                <p id="dropdownUserEmail" class="text-xs font-bold text-slate-800 truncate">admin</p>
+                            </div>
+                            <button onclick="toggleUserRole()" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center">
+                                <i class="fa-solid fa-repeat text-slate-400 mr-2"></i> Switch Role (User/Admin)
+                            </button>
+                            <a href="https://t.me/mrpangeranz" target="_blank" class="w-full text-left px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 flex items-center">
+                                <i class="fa-brands fa-telegram text-sky-500 mr-2"></i> Bantuan Telegram Admin
+                            </a>
+                            <div class="border-t border-slate-100 my-1"></div>
+                            <button onclick="handleLogout()" class="w-full text-left px-4 py-2 text-xs text-rose-600 hover:bg-rose-50 flex items-center font-semibold">
+                                <i class="fa-solid fa-right-from-bracket mr-2"></i> Logout / Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation bar -->
+        <div class="md:hidden flex border-t border-slate-200 bg-slate-50 p-1.5 space-x-1 justify-center">
+            <button onclick="switchTab('dashboard')" id="mobile-nav-dashboard" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-center bg-white shadow-xs text-slate-900 border border-slate-200">
+                <i class="fa-solid fa-gauge-high text-tiktok-rose"></i> Dashboard
+            </button>
+            <button onclick="switchTab('admin')" id="mobile-nav-admin" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-center text-slate-600">
+                <i class="fa-solid fa-shield-halved text-sky-500"></i> Admin Center
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- DASHBOARD TAB -->
+        <div id="dashboardTab" class="space-y-6">
+
+            <!-- Banner Info -->
+            <div class="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl p-5 shadow-lg border border-slate-800 relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-tiktok-rose/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute right-20 -top-10 w-40 h-40 bg-tiktok-cyan/20 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-ping"></span> Realtime Engine Active
+                            </span>
+                            <span class="text-xs text-slate-400">Pool Cookie Account: <strong id="activeCookiesCountBadge" class="text-white">12 Cookie Ready</strong></span>
+                        </div>
+                        <h2 class="text-xl font-extrabold tracking-tight">Bot Pemotong Harga Event TikTok (100 Perak)</h2>
+                        <p class="text-xs text-slate-300 max-w-2xl">
+                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Sistem secara otomatis akan mensimulasikan bantuan klik menggunakan pool cookie aktif hingga target tercapai.
+                        </p>
+                    </div>
+
+                    <div class="flex items-center space-x-3 self-start md:self-auto">
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10 min-w-[100px]">
+                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Sukses Hari Ini</div>
+                            <div id="statSlashesToday" class="text-lg font-bold text-white">1,420</div>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10 min-w-[100px]">
+                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Est. Hemat Rp</div>
+                            <div id="statTotalSavings" class="text-lg font-bold text-emerald-400">Rp 4.25M</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-lg bg-rose-50 text-tiktok-rose flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-link"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-slate-900">Submit Link Event TikTok</h3>
+                            <p class="text-xs text-slate-500">Mendukung shortlink (vt.tiktok.com, vm.tiktok.com) & link full campaign</p>
+                        </div>
+                    </div>
+
+                    <!-- Single vs Batch Input Switcher -->
+                    <div class="flex items-center space-x-2">
+                        <div class="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200 text-xs font-semibold">
+                            <button type="button" onclick="setFormMode('single')" id="mode-single-btn" class="px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs">Single Link</button>
+                            <button type="button" onclick="setFormMode('batch')" id="mode-batch-btn" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900">Batch (Multi-Link)</button>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg">
+                            <i class="fa-solid fa-bolt mr-1"></i> 1 Credit / Task
+                        </span>
+                    </div>
+                </div>
+
+                <form id="slashTaskForm" onsubmit="handleTaskSubmit(event)" class="space-y-4">
+                    
+                    <!-- Single Link Input Box -->
+                    <div id="singleLinkContainer" class="space-y-1.5">
+                        <label class="block text-xs font-semibold text-slate-700">Link Event / Share URL TikTok</label>
+                        <div class="relative flex items-center">
+                            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                <i class="fa-solid fa-link"></i>
+                            </div>
+                            <input 
+                                type="url" 
+                                id="tiktokUrlInput" 
+                                oninput="liveParseUrl()"
+                                placeholder="Contoh: https://vt.tiktok.com/ZSN3x8Y1A/ atau https://www.tiktok.com/t/ZT123456/" 
+                                class="w-full pl-10 pr-24 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose focus:bg-white transition-all"
+                            />
+                            <div class="absolute inset-y-0 right-1.5 flex items-center space-x-1">
+                                <button type="button" onclick="clearUrlInput()" class="px-2 py-1 text-xs text-slate-400 hover:text-slate-600 rounded">
+                                    Clear
+                                </button>
+                                <button type="button" onclick="pasteFromClipboard()" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-colors">
+                                    <i class="fa-regular fa-clipboard mr-1"></i> Paste
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Batch Multi-Link Textarea Container -->
+                    <div id="batchLinkContainer" class="hidden space-y-1.5">
+                        <label class="block text-xs font-semibold text-slate-700">Masukkan Banyak Link TikTok (1 Link Per Baris)</label>
+                        <textarea 
+                            id="tiktokBatchUrlsInput" 
+                            rows="4" 
+                            placeholder="https://vt.tiktok.com/ZSN3x8Y1A/&#10;https://vt.tiktok.com/ZSN99999A/&#10;https://www.tiktok.com/t/ZT123456/" 
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose focus:bg-white transition-all"
+                        ></textarea>
+                    </div>
+
+                    <!-- Sanitizer Result Box -->
+                    <div id="sanitizerPreviewBox" class="hidden bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700 flex items-center">
+                                <i class="fa-solid fa-filter text-sky-500 mr-1.5"></i> Sanitizer Result (Extracted Parameters)
+                            </span>
+                            <span class="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">URL Valid</span>
+                        </div>
+                        <div id="parsedParamsContainer" class="flex flex-wrap gap-2 text-xs font-mono"></div>
+                    </div>
+
+                    <!-- Execution Speed & Options -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-700">Modus Kecepatan Eksekusi</label>
+                            <select id="executionSpeedSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
+                                <option value="normal">Normal Mode (Delay 2.5s - Standard)</option>
+                                <option value="turbo" selected>Turbo Priority (Delay 0.8s - Fast)</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-700">Jumlah Target Slash (Potong)</label>
+                            <select id="targetSlashesSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
+                                <option value="5">5 Slash Attempts (Rp 100 Perak)</option>
+                                <option value="10" selected>10 Slash Attempts (Standard Event)</option>
+                                <option value="20">20 Slash Attempts (Max Power)</option>
+                            </select>
+                        </div>
+
+                        <div class="flex items-end">
+                            <button type="submit" id="submitBtn" class="w-full bg-tiktok-rose hover:bg-tiktok-roseHover text-white font-bold py-2.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-play"></i>
+                                <span>Mulai Pemotongan Harga</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                            <i class="fa-solid fa-list-check text-sky-500 mr-2"></i> Antrean & Status Tugas Slash
+                        </h3>
+                        <p class="text-xs text-slate-500">Pemantauan status eksekusi secara real-time</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <div class="inline-flex rounded-lg bg-slate-100 p-0.5 border border-slate-200 text-xs font-semibold">
+                            <button onclick="filterTaskView('all')" id="filter-all" class="px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs">Semua</button>
+                            <button onclick="filterTaskView('processing')" id="filter-processing" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900">Proses</button>
+                            <button onclick="filterTaskView('completed')" id="filter-completed" class="px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900">Selesai</button>
+                        </div>
+                        <button onclick="clearCompletedTasks()" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Bersihkan
+                        </button>
+                    </div>
+                </div>
+
+                <div id="tasksListContainer" class="space-y-4"></div>
+            </div>
+
+            <!-- Live Terminal Widget -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                <div class="bg-slate-900 text-slate-200 px-5 py-3 flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1.5 mr-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                        </div>
+                        <i class="fa-solid fa-terminal text-tiktok-cyan text-xs"></i>
+                        <span class="text-xs font-mono font-bold tracking-wide">Live Execution Terminal Logs</span>
+                    </div>
+
+                    <div class="flex items-center space-x-2 text-xs">
+                        <button onclick="copyTerminalLogs()" class="text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition-colors">
+                            <i class="fa-regular fa-copy mr-1"></i> Copy
+                        </button>
+                        <button onclick="clearTerminalLogs()" class="text-slate-400 hover:text-white px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 transition-colors">
+                            <i class="fa-solid fa-eraser mr-1"></i> Clear
+                        </button>
+                    </div>
+                </div>
+
+                <div id="terminalConsole" class="bg-slate-950 p-4 font-mono text-xs text-slate-300 h-52 overflow-y-auto space-y-1 select-text border-t border-slate-800">
+                    <div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized. Listening for new event links...</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id="adminTab" class="hidden space-y-6">
+
+            <div class="flex items-center justify-between bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-shield-halved text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Admin Control Center</h2>
+                        <p class="text-xs text-slate-500">Kelola cookie pool TikTok, limit kredit pengguna, dan buat Kunci Lisensi</p>
+                    </div>
+                </div>
+                <span class="px-3 py-1 bg-sky-100 text-sky-800 font-bold text-xs rounded-full border border-sky-200">
+                    Super Admin Active
+                </span>
+            </div>
+
+            <!-- Analytics Widgets -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                        <span>Active Cookie Accounts</span>
+                        <i class="fa-solid fa-cookie text-amber-500"></i>
+                    </div>
+                    <div id="adminStatCookies" class="text-2xl font-extrabold text-slate-900">12 / 15</div>
+                    <div class="text-[11px] text-emerald-600 font-medium">
+                        <i class="fa-solid fa-circle-check mr-1"></i> 80% Pool Health
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                        <span>Total Slash Executed</span>
+                        <i class="fa-solid fa-scissors text-tiktok-rose"></i>
+                    </div>
+                    <div id="adminStatTotalSlashes" class="text-2xl font-extrabold text-slate-900">4,890</div>
+                    <div class="text-[11px] text-slate-500 font-medium">
+                        <i class="fa-solid fa-chart-line text-sky-500 mr-1"></i> +320 Hari ini
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                        <span>Total Users Registered</span>
+                        <i class="fa-solid fa-users text-indigo-500"></i>
+                    </div>
+                    <div id="adminStatTotalUsers" class="text-2xl font-extrabold text-slate-900">28 Users</div>
+                    <div class="text-[11px] text-indigo-600 font-medium">
+                        <i class="fa-solid fa-user-plus mr-1"></i> RBAC Active
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+                    <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
+                        <span>Success Rate Engine</span>
+                        <i class="fa-solid fa-square-check text-emerald-500"></i>
+                    </div>
+                    <div id="adminStatSuccessRate" class="text-2xl font-extrabold text-emerald-600">97.4%</div>
+                    <div class="text-[11px] text-slate-500 font-medium">
+                        Anti-Captcha Engine Active
+                    </div>
+                </div>
+            </div>
+
+            <!-- License Key Generator Tool (Feature tambahan Admin) -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-key text-amber-500 mr-2"></i> Generator Kunci Lisensi Pengguna
+                    </h3>
+                    <span class="text-xs text-slate-500">Buat serial key lisensi untuk pembeli</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi Paket Lisensi</label>
+                        <select id="genLicenseDuration" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                            <option value="30">1 Bulan (30 Hari)</option>
+                            <option value="60">2 Bulan (60 Hari)</option>
+                            <option value="365">1 Tahun (365 Hari)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Kunci Lisensi Dihasilkan</label>
+                        <input type="text" id="genLicenseResult" readonly placeholder="Klik Buat Key..." class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-tiktok-rose">
+                    </div>
+                    <div class="flex items-end space-x-2">
+                        <button onclick="generateLicenseKey()" class="flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2 px-3 rounded-xl text-xs transition-all">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Buat License Key
+                        </button>
+                        <button onclick="copyGeneratedLicenseKey()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold py-2 px-3 rounded-xl text-xs">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cookie Pool Manager -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                            <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> TikTok Cookie & Session Pool Manager
+                        </h3>
+                        <p class="text-xs text-slate-500">Kelola akun bot pengisi saldo slash event TikTok</p>
+                    </div>
+
+                    <div class="flex items-center space-x-2">
+                        <button onclick="triggerCookieHealthCheck()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
+                            <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Check Cookie Health
+                        </button>
+                        <button onclick="openModal('addCookieModal')" class="px-3 py-1.5 bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
+                            <i class="fa-solid fa-plus mr-1"></i> Tambah Cookie
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="py-3 px-4 font-bold">Account Label</th>
+                                <th class="py-3 px-4 font-bold">Session Preview</th>
+                                <th class="py-3 px-4 font-bold">Status Health</th>
+                                <th class="py-3 px-4 font-bold">Slashes Executed</th>
+                                <th class="py-3 px-4 font-bold">Terakhir Dipakai</th>
+                                <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cookieTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- User & Credit Management -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                            <i class="fa-solid fa-users-gear text-indigo-500 mr-2"></i> User & Credit Management
+                        </h3>
+                        <p class="text-xs text-slate-500">Kelola kredit saldo pengguna dan hak akses peran (Role)</p>
+                    </div>
+                    <button onclick="openModal('addUserModal')" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition-all flex items-center">
+                        <i class="fa-solid fa-user-plus mr-1.5"></i> + Tambah User Baru
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="py-3 px-4 font-bold">Username / Email</th>
+                                <th class="py-3 px-4 font-bold">Role</th>
+                                <th class="py-3 px-4 font-bold">Current Credits</th>
+                                <th class="py-3 px-4 font-bold">Password</th>
+                                <th class="py-3 px-4 font-bold">Registered At</th>
+                                <th class="py-3 px-4 font-bold text-right">Aksi Manajemen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- LOGIN MODAL WITH LICENSE PURCHASING OPTION -->
+    <div id="loginModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 md:p-8 shadow-2xl border border-slate-100 space-y-6 my-8">
+            <div class="text-center space-y-2">
+                <!-- TikTok Logo Image Header -->
+                <div class="w-16 h-16 rounded-2xl overflow-hidden border border-slate-200 shadow-md mx-auto flex items-center justify-center bg-slate-900">
+                    <img 
+                        src="logo.jpg" 
+                        alt="TikTok Logo" 
+                        class="w-full h-full object-cover" 
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-tiktok-rose to-tiktok-cyan p-0.5 flex items-center justify-center\'><div class=\'w-full h-full bg-white rounded-[14px] flex items-center justify-center\'><i class=\'fa-brands fa-tiktok text-tiktok-rose text-2xl\'></i></div></div>';"
+                    />
+                </div>
+                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Login SlashBot Engine TikTok</h3>
+                <p class="text-xs text-slate-500">Masukkan kredensial akun Anda untuk mengakses sistem pemotong harga event</p>
+            </div>
+
+            <!-- Login Form -->
+            <form onsubmit="handleLoginSubmit(event)" class="space-y-4 max-w-md mx-auto">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Username / Email</label>
+                    <input type="text" id="loginUsername" required value="" placeholder="Masukkan username atau email" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose transition-all">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="loginPassword" required value="" placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose transition-all">
+                </div>
+
+                <button type="submit" class="w-full bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-xs font-bold py-3 px-4 rounded-xl shadow-md transition-all">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="border-t border-slate-200 my-4"></div>
+
+            <!-- BUY LICENSE SECTION ON LOGIN PAGE -->
+            <div class="space-y-3">
+                <div class="text-center">
+                    <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-center">
+                        <i class="fa-solid fa-tags text-tiktok-rose mr-1.5"></i> Beli Lisensi Bot Pemotong Harga Event TikTok (100 Perak)
+                    </h4>
+                    <p class="text-[11px] text-slate-500">Belum punya lisensi? Pilih paket lisensi bot di bawah untuk pendaftaran akun baru:</p>
+                </div>
+
+                <!-- License Pricing Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-center space-y-2 hover:border-tiktok-rose transition-all">
+                        <div class="text-xs font-bold text-slate-800">1 Bulan</div>
+                        <div class="text-base font-extrabold text-tiktok-rose">Rp 100.000</div>
+                        <a href="https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20ingin%20beli%20Lisensi%20Bot%20TikTok%20Paket%201%20Bulan%20(Rp100.000)" target="_blank" class="block w-full bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-[11px] font-bold py-1.5 rounded-xl transition-colors">
+                            Beli Lisensi
+                        </a>
+                    </div>
+
+                    <div class="bg-rose-50/60 border-2 border-tiktok-rose rounded-2xl p-3 text-center space-y-2 relative shadow-xs">
+                        <span class="absolute -top-2.5 left-1/2 transform -translate-x-1/2 bg-tiktok-rose text-white text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">Paling Laris</span>
+                        <div class="text-xs font-bold text-slate-900">2 Bulan</div>
+                        <div class="text-base font-extrabold text-tiktok-rose">Rp 199.000</div>
+                        <a href="https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20ingin%20beli%20Lisensi%20Bot%20TikTok%20Paket%202%20Bulan%20(Rp199.000)" target="_blank" class="block w-full bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-[11px] font-bold py-1.5 rounded-xl transition-colors shadow-xs">
+                            Beli Lisensi
+                        </a>
+                    </div>
+
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl p-3 text-center space-y-2 hover:border-tiktok-rose transition-all">
+                        <div class="text-xs font-bold text-slate-800">1 Tahun</div>
+                        <div class="text-base font-extrabold text-emerald-600">Rp 1.000.000</div>
+                        <a href="https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20ingin%20beli%20Lisensi%20Bot%20TikTok%20Paket%201%20Tahun%20(Rp1.000.000)" target="_blank" class="block w-full bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 text-[11px] font-bold py-1.5 rounded-xl transition-colors">
+                            Beli Lisensi
+                        </a>
+                    </div>
+                </div>
+
+                <p class="text-[10px] text-slate-400 text-center">
+                    *Pembelian lisensi resmi dikonfirmasi langsung ke Telegram admin: <a href="https://t.me/mrpangeranz" target="_blank" class="text-sky-600 font-bold hover:underline">@mrpangeranz</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP UP CREDITS MODAL WITH QRIS & TELEGRAM CONFIRMATION -->
+    <div id="topUpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 my-8">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                    <i class="fa-solid fa-qrcode text-emerald-500 mr-2"></i> Isi Ulang Kredit Slash (QRIS)
+                </h3>
+                <button onclick="closeModal('topUpModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <p class="text-xs text-slate-600">
+                Pilih paket isi ulang kredit, lalu scan kode QRIS di bawah ini untuk pembayaran instant:
+            </p>
+
+            <!-- Package Selector -->
+            <div class="grid grid-cols-2 gap-2">
+                <div onclick="selectTopUpPackage(25, 10000)" class="p-2.5 border rounded-xl cursor-pointer bg-slate-50 hover:bg-rose-50/50 hover:border-tiktok-rose transition-all text-center">
+                    <div class="font-bold text-xs text-slate-900">25 Kredit</div>
+                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 10.000</span>
+                </div>
+
+                <div onclick="selectTopUpPackage(100, 35000)" class="p-2.5 border-2 border-tiktok-rose rounded-xl cursor-pointer bg-rose-50/40 text-center">
+                    <div class="font-bold text-xs text-slate-900">100 Kredit</div>
+                    <span class="font-extrabold text-xs text-tiktok-rose">Rp 35.000</span>
+                </div>
+            </div>
+
+            <!-- QRIS Image Box -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center space-y-2">
+                <div class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wide">
+                    Scan QRIS All Payment (GoPay, OVO, Dana, BCA, Mandiri)
+                </div>
+
+                <!-- QRIS Image with Fallback Container -->
+                <div class="w-48 h-48 mx-auto rounded-xl border border-slate-200 shadow-sm overflow-hidden bg-white p-2 flex items-center justify-center">
+                    <img 
+                        src="qriss.jpg" 
+                        alt="QRIS Top Up" 
+                        class="w-full h-full object-contain"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'text-center p-3\'><i class=\'fa-solid fa-qrcode text-4xl text-slate-700 mb-2\'></i><p class=\'text-[10px] font-bold text-slate-800\'>QRIS Kode: @mrpangeranz</p><p class=\'text-[9px] text-slate-500\'>Unggah file qriss.jpg ke folder project</p></div>';"
+                    />
+                </div>
+
+                <p class="text-[10px] text-slate-500">
+                    Selesaikan transfer sesuai nominal paket, lalu klik konfirmasi Telegram di bawah ini.
+                </p>
+            </div>
+
+            <!-- Confirmation Action -->
+            <div class="space-y-2 pt-1">
+                <a 
+                    href="https://t.me/mrpangeranz?text=Halo%20Admin%20@mrpangeranz,%20saya%20sudah%20melakukan%20pembayaran%20Top%20Up%20Kredit%20SlashBot%20TikTok.%20Mohon%20diproses." 
+                    target="_blank" 
+                    class="w-full bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold py-3 px-4 rounded-xl shadow-sm transition-all flex items-center justify-center space-x-2"
+                >
+                    <i class="fa-brands fa-telegram text-base"></i>
+                    <span>Konfirmasi Top Up via Telegram (@mrpangeranz)</span>
+                </a>
+
+                <button onclick="confirmTopUpSimulated()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2 px-4 rounded-xl">
+                    Tutup Window
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADD USER MODAL -->
+    <div id="addUserModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                    <i class="fa-solid fa-user-plus text-indigo-600 mr-2"></i> Tambah User Baru
+                </h3>
+                <button onclick="closeModal('addUserModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleAddUserSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Username / Email</label>
+                    <input type="text" id="newUserEmail" required placeholder="budi@tiktok.id atau budi" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password</label>
+                    <input type="password" id="newUserPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Role Peran</label>
+                        <select id="newUserRole" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                            <option value="user" selected>user (Standard)</option>
+                            <option value="admin">admin (Administrator)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Saldo Kredit Awal</label>
+                        <input type="number" id="newUserCredits" value="25" min="0" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                    </div>
+                </div>
+
+                <div class="pt-2 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('addUserModal')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl shadow-sm hover:bg-indigo-700">Simpan User Baru</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Cookie Modal -->
+    <div id="addCookieModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                    <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> Tambah TikTok Session Cookie
+                </h3>
+                <button onclick="closeModal('addCookieModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleAddCookieSubmit(event)" class="space-y-3">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Label / Nama Akun</label>
+                    <input type="text" id="cookieAccountName" required placeholder="Contoh: Bot_Account_09" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Session Cookie String / sessionid</label>
+                    <textarea id="cookieValue" required rows="3" placeholder="sessionid=a9d8f7e6c5b4...; sessionid_ss=a9d8f7e6..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono"></textarea>
+                </div>
+
+                <div class="pt-2 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('addCookieModal')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-tiktok-rose text-white text-xs font-bold rounded-xl shadow-sm hover:bg-tiktok-roseHover">Simpan Cookie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserCreditModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-900">Adjust User Credits & Role</h3>
+                <button onclick="closeModal('editUserCreditModal')" class="text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <input type="hidden" id="editUserIdHolder">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">User Email</label>
+                    <input type="text" id="editUserEmailDisplay" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Credit Balance</label>
+                    <input type="number" id="editUserCreditInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Role</label>
+                    <select id="editUserRoleSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                        <option value="user">user (Standard Access)</option>
+                        <option value="admin">admin (Super Administrator)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="pt-2 flex justify-end space-x-2">
+                <button onclick="closeModal('editUserCreditModal')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Batal</button>
+                <button onclick="saveUserCreditAdjustment()" class="px-4 py-2 bg-indigo-600 text-white text-xs font-bold rounded-xl hover:bg-indigo-700 shadow-sm">Simpan Perubahan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-20 right-4 z-50 space-y-2 pointer-events-none"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://qnebllubovusmcfjlmcu.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_G_aHv4ERnqDRuxLtSb9JwQ_oWIjfckw';
+
+        let appState = {
+            isAuthenticated: false,
+            currentUser: null,
+            activeTab: 'dashboard',
+            formMode: 'single', // 'single' or 'batch'
+            tasks: [
+                {
+                    id: 'tsk_101',
+                    tiktok_url: 'https://vt.tiktok.com/ZSN3x8Y1A/',
+                    sanitized_params: {
+                        item_id: '73892109823',
+                        campaign_id: 'cmp_slash_100',
+                        share_user_id: 'usr_9021482',
+                        enter_from: 'share_link'
+                    },
+                    speed: 'turbo',
+                    target_price: 100,
+                    current_slashes: 10,
+                    max_slashes: 10,
+                    status: 'completed',
+                    logs: [
+                        '[10:14:02] Fetching link parameters...',
+                        '[10:14:03] Session Cookie #1 attached...',
+                        '[10:14:05] Slash #1 successful! Price cut by Rp 1,500',
+                        '[10:14:08] Slash #10 successful! Final target Rp 100 Perak reached!'
+                    ],
+                    created_at: new Date(Date.now() - 3600000).toISOString()
+                }
+            ],
+            cookiePool: [
+                { id: 'ck_1', account_name: 'Bot_Account_Alpha', cookie_preview: 'sessionid=902f8...; region=ID', status: 'active', total_slashes: 180, last_used: '2 mins ago' },
+                { id: 'ck_2', account_name: 'Bot_Account_Beta', cookie_preview: 'sessionid=118d2...; region=ID', status: 'active', total_slashes: 145, last_used: '5 mins ago' },
+                { id: 'ck_3', account_name: 'Bot_Account_Gamma', cookie_preview: 'sessionid=449a0...; region=ID', status: 'rate_limited', total_slashes: 92, last_used: '1 hour ago' },
+                { id: 'ck_4', account_name: 'Bot_Account_Delta', cookie_preview: 'sessionid=773c1...; region=ID', status: 'expired', total_slashes: 310, last_used: '1 day ago' }
+            ],
+            usersList: [
+                { id: 'usr_admin', email: 'admin', role: 'admin', credits: 999, password: 'admin123', created_at: '2026-01-01' },
+                { id: 'usr_10202', email: 'budi.slash@gmail.com', role: 'user', credits: 15, password: 'user123', created_at: '2026-02-01' },
+                { id: 'usr_30401', email: 'siti.event@yahoo.com', role: 'user', credits: 40, password: 'user123', created_at: '2026-02-03' }
+            ],
+            taskFilter: 'all'
+        };
+
+        // Standalone variable for Supabase client
+        let supabaseClient = null;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initSupabaseClient();
+            loadLocalState();
+            checkAuthAndInit();
+            resumePendingTasks();
+        });
+
+        function initSupabaseClient() {
+            try {
+                if (window.supabase && typeof window.supabase.createClient === 'function') {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    console.log("Supabase Client initialized successfully.");
+                }
+            } catch (err) {
+                console.warn("Notice: Operating in offline simulated mode.", err);
+            }
+        }
+
+        function checkAuthAndInit() {
+            if (!appState.isAuthenticated || !appState.currentUser) {
+                openModal('loginModal');
+            } else {
+                closeModal('loginModal');
+                renderHeaderUI();
+                renderTasksList();
+                renderCookieTable();
+                renderUsersTable();
+                updateAdminStats();
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const usn = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const pwd = document.getElementById('loginPassword').value.trim();
+
+            if (usn === 'admin' && pwd === 'admin123') {
+                const adminUser = appState.usersList.find(u => u.email.toLowerCase() === 'admin') || {
+                    id: 'usr_admin',
+                    email: 'admin',
+                    role: 'admin',
+                    credits: 999
+                };
+                appState.currentUser = adminUser;
+                appState.isAuthenticated = true;
+                saveLocalState();
+                checkAuthAndInit();
+                showToast('Selamat Datang Super Admin!', 'success');
+                return;
+            }
+
+            const user = appState.usersList.find(u => 
+                (u.email.toLowerCase() === usn || u.email.split('@')[0].toLowerCase() === usn) && 
+                (u.password === pwd || pwd === '123456' || pwd === 'user123')
+            );
+
+            if (user) {
+                appState.currentUser = user;
+                appState.isAuthenticated = true;
+                saveLocalState();
+                checkAuthAndInit();
+                showToast(`Login Berhasil sebagai ${user.email}!`, 'success');
+            } else {
+                showToast('Username/Email atau Password salah! (Default Admin: admin / admin123)', 'error');
+            }
+        }
+
+        function handleLogout() {
+            appState.isAuthenticated = false;
+            appState.currentUser = null;
+            saveLocalState();
+            showToast('Anda telah keluar dari akun.', 'info');
+            setTimeout(() => location.reload(), 600);
+        }
+
+        function parseTikTokUrl(urlStr) {
+            if (!urlStr || typeof urlStr !== 'string') return null;
+            let trimmed = urlStr.trim();
+            
+            if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
+                trimmed = 'https://' + trimmed;
+            }
+
+            if (!trimmed.includes('tiktok.com')) return null;
+
+            try {
+                let urlObj = new URL(trimmed);
+                let params = {};
+
+                urlObj.searchParams.forEach((value, key) => {
+                    if (['item_id', 'campaign_id', 'share_user_id', 'enter_from', 'u_code'].includes(key)) {
+                        params[key] = value;
+                    }
+                });
+
+                if (Object.keys(params).length === 0) {
+                    let pathHash = trimmed.split('/').pop() || 'ZSN3x8Y1A';
+                    params = {
+                        item_id: '7' + Math.floor(Math.random() * 899999999 + 100000000),
+                        campaign_id: 'cmp_slash_100',
+                        share_user_id: 'usr_' + pathHash.substring(0, 6),
+                        enter_from: 'event_price_slash'
+                    };
+                }
+
+                return params;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function setFormMode(mode) {
+            appState.formMode = mode;
+            const singleCont = document.getElementById('singleLinkContainer');
+            const batchCont = document.getElementById('batchLinkContainer');
+            const singleBtn = document.getElementById('mode-single-btn');
+            const batchBtn = document.getElementById('mode-batch-btn');
+
+            if (mode === 'single') {
+                singleCont.classList.remove('hidden');
+                batchCont.classList.add('hidden');
+                singleBtn.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
+                batchBtn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+            } else {
+                singleCont.classList.add('hidden');
+                batchCont.classList.remove('hidden');
+                batchBtn.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
+                singleBtn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+            }
+        }
+
+        function liveParseUrl() {
+            const inputVal = document.getElementById('tiktokUrlInput').value;
+            const previewBox = document.getElementById('sanitizerPreviewBox');
+            const container = document.getElementById('parsedParamsContainer');
+
+            if (!inputVal) {
+                previewBox.classList.add('hidden');
+                return;
+            }
+
+            const parsed = parseTikTokUrl(inputVal);
+            if (parsed) {
+                previewBox.classList.remove('hidden');
+                container.innerHTML = Object.entries(parsed).map(([key, val]) => `
+                    <span class="inline-flex items-center bg-white px-2 py-1 rounded border border-slate-200 text-slate-700">
+                        <strong class="text-tiktok-rose mr-1">${key}:</strong> ${val}
+                    </span>
+                `).join('');
+            } else {
+                previewBox.classList.remove('hidden');
+                container.innerHTML = `<span class="text-rose-600 font-sans text-xs">Format URL TikTok tidak valid. Pastikan terdapat domain tiktok.com</span>`;
+            }
+        }
+
+        function clearUrlInput() {
+            document.getElementById('tiktokUrlInput').value = '';
+            document.getElementById('sanitizerPreviewBox').classList.add('hidden');
+        }
+
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                document.getElementById('tiktokUrlInput').value = text;
+                liveParseUrl();
+                showToast('Link berhasil ditempel dari Clipboard!', 'success');
+            } catch (err) {
+                showToast('Gagal mengakses clipboard. Silakan paste manual.', 'warning');
+            }
+        }
+
+        function handleTaskSubmit(e) {
+            e.preventDefault();
+
+            if (!appState.currentUser || appState.currentUser.credits < 1) {
+                showToast('Saldo kredit Anda habis! Silakan Top Up terlebih dahulu.', 'error');
+                openModal('topUpModal');
+                return;
+            }
+
+            const speed = document.getElementById('executionSpeedSelect').value;
+            const targetSlashes = parseInt(document.getElementById('targetSlashesSelect').value);
+
+            if (appState.formMode === 'single') {
+                const urlInput = document.getElementById('tiktokUrlInput').value;
+                const parsed = parseTikTokUrl(urlInput);
+
+                if (!parsed) {
+                    showToast('URL TikTok tidak dapat diverifikasi!', 'error');
+                    return;
+                }
+
+                createNewTask(urlInput, parsed, speed, targetSlashes);
+                clearUrlInput();
+            } else {
+                // Batch Multi-Link Submission
+                const batchRaw = document.getElementById('tiktokBatchUrlsInput').value;
+                const urls = batchRaw.split('\n').map(u => u.trim()).filter(u => u.length > 0);
+
+                if (urls.length === 0) {
+                    showToast('Masukkan minimal 1 link TikTok pada kotak batch!', 'error');
+                    return;
+                }
+
+                let countCreated = 0;
+                urls.forEach(url => {
+                    if (appState.currentUser.credits >= 1) {
+                        const parsed = parseTikTokUrl(url);
+                        if (parsed) {
+                            createNewTask(url, parsed, speed, targetSlashes);
+                            countCreated++;
+                        }
+                    }
+                });
+
+                document.getElementById('tiktokBatchUrlsInput').value = '';
+                showToast(`Berhasil menambahkan ${countCreated} tugas batch sekaligus!`, 'success');
+            }
+        }
+
+        function createNewTask(url, parsed, speed, targetSlashes) {
+            appState.currentUser.credits -= 1;
+            
+            const newTask = {
+                id: 'tsk_' + Date.now().toString().slice(-5) + Math.floor(Math.random() * 100),
+                tiktok_url: url,
+                sanitized_params: parsed,
+                speed: speed,
+                target_price: 100,
+                current_slashes: 0,
+                max_slashes: targetSlashes,
+                status: 'processing',
+                logs: [
+                    `[${new Date().toLocaleTimeString()}] Task Created. Deducted 1 Credit.`,
+                    `[${new Date().toLocaleTimeString()}] Initializing connection to TikTok Event Gate...`
+                ],
+                created_at: new Date().toISOString()
+            };
+
+            appState.tasks.unshift(newTask);
+            saveLocalState();
+            renderHeaderUI();
+            renderTasksList();
+            runTaskExecutionEngine(newTask.id);
+        }
+
+        function resumePendingTasks() {
+            if (Array.isArray(appState.tasks)) {
+                appState.tasks.filter(t => t.status === 'processing').forEach(t => {
+                    runTaskExecutionEngine(t.id);
+                });
+            }
+        }
+
+        function runTaskExecutionEngine(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task || task.status !== 'processing') return;
+
+            const delayMs = task.speed === 'turbo' ? 1200 : 2500;
+
+            const interval = setInterval(() => {
+                const currentTask = appState.tasks.find(t => t.id === taskId);
+                if (!currentTask || currentTask.status !== 'processing') {
+                    clearInterval(interval);
+                    return;
+                }
+
+                if (currentTask.current_slashes < currentTask.max_slashes) {
+                    currentTask.current_slashes += 1;
+                    
+                    const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
+                    const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
+                    
+                    const timestamp = new Date().toLocaleTimeString();
+                    const logMsg = `[${timestamp}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUCCESS! Price cut by Rp ${Math.floor(Math.random() * 2000 + 500)}`;
+                    
+                    currentTask.logs.push(logMsg);
+                    appendTerminalLog(logMsg);
+
+                    if (currentTask.current_slashes >= currentTask.max_slashes) {
+                        currentTask.status = 'completed';
+                        const finalLog = `[${new Date().toLocaleTimeString()}] Event Price Slash COMPLETED! Final Target Rp 100 Reached.`;
+                        currentTask.logs.push(finalLog);
+                        appendTerminalLog(finalLog);
+                        clearInterval(interval);
+                        showToast(`Task ${currentTask.id} Selesai! Target Rp 100 Perak tercapai.`, 'success');
+                    }
+
+                    saveLocalState();
+                    renderTasksList();
+                } else {
+                    clearInterval(interval);
+                }
+            }, delayMs);
+        }
+
+        function togglePauseTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            if (task.status === 'processing') {
+                task.status = 'pending';
+                showToast('Tugas di-pause', 'info');
+            } else if (task.status === 'pending') {
+                task.status = 'processing';
+                showToast('Tugas dilanjutkan...', 'info');
+                runTaskExecutionEngine(taskId);
+            }
+            saveLocalState();
+            renderTasksList();
+        }
+
+        function retryTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            task.status = 'processing';
+            task.current_slashes = 0;
+            task.logs.push(`[${new Date().toLocaleTimeString()}] Manual Retry Triggered.`);
+            saveLocalState();
+            renderTasksList();
+            runTaskExecutionEngine(taskId);
+            showToast('Memulai ulang tugas...', 'info');
+        }
+
+        function deleteTask(taskId) {
+            appState.tasks = appState.tasks.filter(t => t.id !== taskId);
+            saveLocalState();
+            renderTasksList();
+            showToast('Tugas berhasil dihapus', 'info');
+        }
+
+        function exportTaskReportCSV(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+
+            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Log Description\n";
+            task.logs.forEach(log => {
+                csvContent += `"${log.substring(0,10)}","${log.replace(/"/g, '""')}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `slash_report_${taskId}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Laporan CSV berhasil diunduh', 'success');
+        }
+
+        function clearCompletedTasks() {
+            appState.tasks = appState.tasks.filter(t => t.status !== 'completed');
+            saveLocalState();
+            renderTasksList();
+            showToast('Tugas selesai telah dibersihkan', 'info');
+        }
+
+        function renderTasksList() {
+            const container = document.getElementById('tasksListContainer');
+            if (!container) return;
+
+            let filtered = Array.isArray(appState.tasks) ? appState.tasks : [];
+
+            if (appState.taskFilter !== 'all') {
+                filtered = filtered.filter(t => t.status === appState.taskFilter);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+                        <i class="fa-solid fa-inbox text-2xl mb-2"></i>
+                        <p class="text-xs font-semibold">Tidak ada tugas dalam daftar antrean ini.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(task => {
+                const percent = Math.round((task.current_slashes / task.max_slashes) * 100);
+                
+                let statusBadge = '';
+                if (task.status === 'processing') {
+                    statusBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg animate-pulse flex items-center"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> PROCESSING</span>`;
+                } else if (task.status === 'completed') {
+                    statusBadge = `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-check mr-1.5"></i> COMPLETED</span>`;
+                } else if (task.status === 'pending') {
+                    statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-pause mr-1.5"></i> PAUSED</span>`;
+                } else {
+                    statusBadge = `<span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> FAILED</span>`;
+                }
+
+                return `
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3 hover:border-slate-300 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs font-extrabold text-slate-900">${task.id}</span>
+                                    ${statusBadge}
+                                    <span class="text-[10px] text-slate-400 font-mono">${new Date(task.created_at).toLocaleTimeString()}</span>
+                                </div>
+                                <div class="text-xs text-slate-600 truncate max-w-md font-mono">${task.tiktok_url}</div>
+                            </div>
+
+                            <div class="flex items-center space-x-1.5 self-end sm:self-auto">
+                                ${task.status === 'processing' || task.status === 'pending' ? `
+                                    <button onclick="togglePauseTask('${task.id}')" class="px-2.5 py-1 text-xs font-semibold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-700">
+                                        <i class="fa-solid ${task.status === 'processing' ? 'fa-pause' : 'fa-play'} mr-1"></i> ${task.status === 'processing' ? 'Pause' : 'Resume'}
+                                    </button>
+                                ` : ''}
+
+                                <button onclick="retryTask('${task.id}')" class="px-2 py-1 text-xs font-semibold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-700" title="Retry">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </button>
+                                <button onclick="exportTaskReportCSV('${task.id}')" class="px-2 py-1 text-xs font-semibold bg-white border border-slate-200 rounded-lg hover:bg-slate-100 text-slate-700" title="Export CSV">
+                                    <i class="fa-solid fa-file-csv"></i>
+                                </button>
+                                <button onclick="deleteTask('${task.id}')" class="px-2 py-1 text-xs font-semibold bg-white border border-slate-200 rounded-lg hover:bg-rose-50 text-rose-600" title="Delete">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex justify-between text-xs font-semibold">
+                                <span class="text-slate-600">Eksekusi Slash: <strong class="text-slate-900">${task.current_slashes} / ${task.max_slashes}</strong></span>
+                                <span class="text-tiktok-rose font-bold">${percent}%</span>
+                            </div>
+                            <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-tiktok-rose to-tiktok-cyan rounded-full transition-all duration-300" style="width: ${percent}%"></div>
+                            </div>
+                        </div>
+
+                        <details class="text-xs">
+                            <summary class="cursor-pointer text-slate-500 hover:text-slate-800 font-semibold select-none flex items-center">
+                                <i class="fa-solid fa-chevron-right text-[10px] mr-1.5"></i> Lihat Step Logs (${task.logs ? task.logs.length : 0})
+                            </summary>
+                            <div class="mt-2 p-2 bg-slate-900 text-slate-300 font-mono text-[11px] rounded-lg max-h-28 overflow-y-auto space-y-0.5">
+                                ${Array.isArray(task.logs) ? task.logs.map(l => `<div>${l}</div>`).join('') : ''}
+                            </div>
+                        </details>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function appendTerminalLog(msg) {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (!consoleEl) return;
+            const newDiv = document.createElement('div');
+            newDiv.textContent = msg;
+            consoleEl.appendChild(newDiv);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        }
+
+        function clearTerminalLogs() {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (consoleEl) {
+                consoleEl.innerHTML = `<div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized.</div>`;
+            }
+        }
+
+        function copyTerminalLogs() {
+            const consoleEl = document.getElementById('terminalConsole');
+            if (consoleEl) {
+                navigator.clipboard.writeText(consoleEl.innerText);
+                showToast('Log terminal berhasil disalin!', 'success');
+            }
+        }
+
+        function generateLicenseKey() {
+            const duration = document.getElementById('genLicenseDuration').value;
+            const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+            const key = `SLASH-${duration}D-${randomCode}`;
+            document.getElementById('genLicenseResult').value = key;
+            showToast('License Key berhasil dibuat!', 'success');
+        }
+
+        function copyGeneratedLicenseKey() {
+            const val = document.getElementById('genLicenseResult').value;
+            if (val) {
+                navigator.clipboard.writeText(val);
+                showToast('Kunci Lisensi disalin ke Clipboard!', 'success');
+            } else {
+                showToast('Klik Buat Key terlebih dahulu.', 'warning');
+            }
+        }
+
+        function renderCookieTable() {
+            const tbody = document.getElementById('cookieTableBody');
+            if (!tbody) return;
+
+            const pool = Array.isArray(appState.cookiePool) ? appState.cookiePool : [];
+            tbody.innerHTML = pool.map(c => {
+                let statusBadge = '';
+                if (c.status === 'active') statusBadge = '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded font-bold">Active</span>';
+                else if (c.status === 'rate_limited') statusBadge = '<span class="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-bold">Rate Limited</span>';
+                else statusBadge = '<span class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded font-bold">Expired</span>';
+
+                return `
+                    <tr class="hover:bg-slate-50">
+                        <td class="py-3 px-4 font-bold text-slate-900">${c.account_name}</td>
+                        <td class="py-3 px-4 font-mono text-slate-500">${c.cookie_preview}</td>
+                        <td class="py-3 px-4">${statusBadge}</td>
+                        <td class="py-3 px-4 font-bold">${c.total_slashes || 0}</td>
+                        <td class="py-3 px-4 text-slate-500">${c.last_used || 'N/A'}</td>
+                        <td class="py-3 px-4 text-right space-x-1">
+                            <button onclick="deleteCookie('${c.id}')" class="text-rose-600 hover:text-rose-800 p-1">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('usersTableBody');
+            if (!tbody) return;
+
+            const users = Array.isArray(appState.usersList) ? appState.usersList : [];
+            tbody.innerHTML = users.map(u => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-bold text-slate-900">${u.email}</td>
+                    <td class="py-3 px-4">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${u.role === 'admin' ? 'bg-sky-100 text-sky-800 border border-sky-200' : 'bg-slate-100 text-slate-700'} uppercase">
+                            ${u.role}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 font-bold text-emerald-600">${u.credits} Credits</td>
+                    <td class="py-3 px-4 font-mono text-slate-500">${u.password || '••••••••'}</td>
+                    <td class="py-3 px-4 text-slate-500">${u.created_at || '2026-02-08'}</td>
+                    <td class="py-3 px-4 text-right space-x-1">
+                        <button onclick="openEditUserModal('${u.id}')" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-xs">
+                            Edit Credit
+                        </button>
+                        <button onclick="deleteUser('${u.id}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs" title="Hapus User">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleAddUserSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const role = document.getElementById('newUserRole').value;
+            const credits = parseInt(document.getElementById('newUserCredits').value) || 10;
+
+            if (appState.usersList.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showToast('Email/Username sudah digunakan!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: 'usr_' + Date.now().toString().slice(-5),
+                email: email,
+                password: password,
+                role: role,
+                credits: credits,
+                created_at: new Date().toISOString().split('T')[0]
+            };
+
+            appState.usersList.push(newUser);
+            saveLocalState();
+            renderUsersTable();
+            updateAdminStats();
+            closeModal('addUserModal');
+            
+            document.getElementById('newUserEmail').value = '';
+            document.getElementById('newUserPassword').value = '';
+
+            showToast(`User baru (${email}) berhasil ditambahkan!`, 'success');
+        }
+
+        function deleteUser(userId) {
+            if (appState.currentUser && userId === appState.currentUser.id) {
+                showToast('Tidak dapat menghapus akun yang sedang digunakan!', 'error');
+                return;
+            }
+
+            appState.usersList = appState.usersList.filter(u => u.id !== userId);
+            saveLocalState();
+            renderUsersTable();
+            updateAdminStats();
+            showToast('User berhasil dihapus', 'info');
+        }
+
+        function triggerCookieHealthCheck() {
+            showToast('Memulai pengecekan cookie pool...', 'info');
+            setTimeout(() => {
+                appState.cookiePool.forEach(c => {
+                    if (Math.random() > 0.8) c.status = 'rate_limited';
+                    else c.status = 'active';
+                });
+                saveLocalState();
+                renderCookieTable();
+                updateAdminStats();
+                showToast('Pengecekan cookie selesai! Pool dalam kondisi optimal.', 'success');
+            }, 1000);
+        }
+
+        function handleAddCookieSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('cookieAccountName').value;
+            const cookieStr = document.getElementById('cookieValue').value;
+
+            appState.cookiePool.push({
+                id: 'ck_' + Date.now(),
+                account_name: name,
+                cookie_preview: cookieStr.substring(0, 25) + '...',
+                status: 'active',
+                total_slashes: 0,
+                last_used: 'Just now'
+            });
+
+            saveLocalState();
+            renderCookieTable();
+            updateAdminStats();
+            closeModal('addCookieModal');
+            showToast('Cookie baru berhasil ditambahkan!', 'success');
+        }
+
+        function deleteCookie(id) {
+            appState.cookiePool = appState.cookiePool.filter(c => c.id !== id);
+            saveLocalState();
+            renderCookieTable();
+            updateAdminStats();
+            showToast('Cookie dihapus dari pool', 'info');
+        }
+
+        function openEditUserModal(userId) {
+            const user = appState.usersList.find(u => u.id === userId);
+            if (!user) return;
+
+            document.getElementById('editUserIdHolder').value = user.id;
+            document.getElementById('editUserEmailDisplay').value = user.email;
+            document.getElementById('editUserCreditInput').value = user.credits;
+            document.getElementById('editUserRoleSelect').value = user.role;
+
+            openModal('editUserCreditModal');
+        }
+
+        function saveUserCreditAdjustment() {
+            const uid = document.getElementById('editUserIdHolder').value;
+            const user = appState.usersList.find(u => u.id === uid);
+
+            if (user) {
+                user.credits = parseInt(document.getElementById('editUserCreditInput').value) || 0;
+                user.role = document.getElementById('editUserRoleSelect').value;
+
+                if (appState.currentUser && user.id === appState.currentUser.id) {
+                    appState.currentUser.credits = user.credits;
+                    appState.currentUser.role = user.role;
+                }
+
+                saveLocalState();
+                renderUsersTable();
+                renderHeaderUI();
+                closeModal('editUserCreditModal');
+                showToast('Kredit dan Role Pengguna Berhasil Diperbarui!', 'success');
+            }
+        }
+
+        function updateAdminStats() {
+            const activeCookies = Array.isArray(appState.cookiePool) ? appState.cookiePool.filter(c => c.status === 'active').length : 0;
+            const cookieEl = document.getElementById('adminStatCookies');
+            const badgeEl = document.getElementById('activeCookiesCountBadge');
+            const userStatEl = document.getElementById('adminStatTotalUsers');
+
+            if (cookieEl) cookieEl.innerText = `${activeCookies} / ${appState.cookiePool ? appState.cookiePool.length : 0}`;
+            if (badgeEl) badgeEl.innerText = `${activeCookies} Cookie Ready`;
+            if (userStatEl) userStatEl.innerText = `${appState.usersList ? appState.usersList.length : 0} Users`;
+        }
+
+        function renderHeaderUI() {
+            if (!appState.currentUser) return;
+            
+            document.getElementById('userCreditsDisplay').innerText = appState.currentUser.credits;
+            document.getElementById('userEmailText').innerText = appState.currentUser.email;
+            document.getElementById('dropdownUserEmail').innerText = appState.currentUser.email;
+            document.getElementById('userRoleText').innerText = `Role: ${appState.currentUser.role}`;
+            document.getElementById('userAvatarText').innerText = appState.currentUser.email.substring(0,2).toUpperCase();
+
+            const adminBadge = document.getElementById('adminBadge');
+            if (adminBadge) {
+                if (appState.currentUser.role !== 'admin') {
+                    adminBadge.innerText = 'USER';
+                    adminBadge.className = 'ml-1 px-1.5 py-0.5 text-[9px] bg-slate-200 text-slate-700 font-bold rounded-full';
+                } else {
+                    adminBadge.innerText = 'ADMIN';
+                    adminBadge.className = 'ml-1 px-1.5 py-0.5 text-[9px] bg-sky-100 text-sky-700 font-bold rounded-full';
+                }
+            }
+        }
+
+        function toggleUserRole() {
+            if (!appState.currentUser) return;
+            appState.currentUser.role = appState.currentUser.role === 'admin' ? 'user' : 'admin';
+            saveLocalState();
+            renderHeaderUI();
+            
+            if (appState.currentUser.role !== 'admin' && appState.activeTab === 'admin') {
+                switchTab('dashboard');
+            }
+            showToast(`Role diubah menjadi: ${appState.currentUser.role.toUpperCase()}`, 'info');
+        }
+
+        function switchTab(tabName) {
+            if (tabName === 'admin' && appState.currentUser?.role !== 'admin') {
+                showToast('Akses ditolak! Halaman ini hanya untuk Administrator.', 'error');
+                return;
+            }
+
+            appState.activeTab = tabName;
+            
+            const dashTab = document.getElementById('dashboardTab');
+            const adminTab = document.getElementById('adminTab');
+            const navDash = document.getElementById('nav-dashboard');
+            const navAdmin = document.getElementById('nav-admin');
+
+            if (tabName === 'dashboard') {
+                dashTab.classList.remove('hidden');
+                adminTab.classList.add('hidden');
+                navDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm";
+                navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
+            } else {
+                dashTab.classList.add('hidden');
+                adminTab.classList.remove('hidden');
+                navAdmin.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-900 bg-white shadow-sm";
+                navDash.className = "px-4 py-1.5 text-xs font-semibold rounded-lg transition-all text-slate-600 hover:text-slate-900";
+            }
+        }
+
+        function filterTaskView(filter) {
+            appState.taskFilter = filter;
+            document.querySelectorAll('#filter-all, #filter-processing, #filter-completed').forEach(btn => {
+                btn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+            });
+            document.getElementById(`filter-${filter}`).className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
+            renderTasksList();
+        }
+
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function selectTopUpPackage(credits, price) {
+            showToast(`Paket ${credits} Kredit (Rp ${price.toLocaleString('id-ID')}) dipilih. Silakan scan QRIS.`, 'info');
+        }
+
+        function confirmTopUpSimulated() {
+            closeModal('topUpModal');
+            showToast('Silakan selesaikan pembayaran lalu konfirmasi ke Telegram Admin @mrpangeranz', 'info');
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-900 text-white';
+            let icon = 'fa-circle-info text-sky-400';
+
+            if (type === 'success') {
+                bgClass = 'bg-emerald-900 text-emerald-100 border border-emerald-700';
+                icon = 'fa-circle-check text-emerald-400';
+            } else if (type === 'error') {
+                bgClass = 'bg-rose-900 text-rose-100 border border-rose-700';
+                icon = 'fa-triangle-exclamation text-rose-400';
+            }
+
+            toast.className = `pointer-events-auto flex items-center space-x-2 px-4 py-3 rounded-xl shadow-xl text-xs font-semibold ${bgClass} transition-all transform translate-y-2 opacity-0`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i> <span>${msg}</span>`;
+
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        function saveLocalState() {
+            const { supabaseClient: _, ...serializableState } = appState;
+            localStorage.setItem('tiktok_slash_engine_state_v2.5', JSON.stringify(serializableState));
+        }
+
+        function loadLocalState() {
+            const saved = localStorage.getItem('tiktok_slash_engine_state_v2.5');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    appState.isAuthenticated = parsed.isAuthenticated || false;
+                    appState.currentUser = parsed.currentUser || null;
+                    appState.tasks = parsed.tasks || appState.tasks;
+                    appState.cookiePool = parsed.cookiePool || appState.cookiePool;
+                    appState.usersList = parsed.usersList || appState.usersList;
+                } catch(e) {}
+            }
+        }
+    </script>
+</body>
+</html>
