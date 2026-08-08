@@ -273,7 +273,16 @@
                     </div>
 
                     <!-- Execution Speed & Options -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
+                        <div class="space-y-1">
+                            <label class="block text-xs font-semibold text-slate-700">Server Node Eksekusi</label>
+                            <select id="serverNodeSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
+                                <option value="jkt-01" selected>🇮🇩 Node-JKT01 (Jakarta - High Priority)</option>
+                                <option value="sgp-02">🇸🇬 Node-SGP02 (Singapore - Low Latency)</option>
+                                <option value="usa-01">🇺🇸 Node-USA01 (US West - Proxy Cluster)</option>
+                            </select>
+                        </div>
+
                         <div class="space-y-1">
                             <label class="block text-xs font-semibold text-slate-700">Modus Kecepatan Eksekusi</label>
                             <select id="executionSpeedSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
@@ -438,6 +447,25 @@
                         </select>
                     </div>
                     <div>
+            <!-- License Key Generator & Active Keys Table -->
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-sm font-bold text-slate-900 flex items-center">
+                        <i class="fa-solid fa-key text-amber-500 mr-2"></i> Generator & Manajemen Kunci Lisensi
+                    </h3>
+                    <span class="text-xs text-slate-500">Kelola serial key lisensi pengguna</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi Paket Lisensi</label>
+                        <select id="genLicenseDuration" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold">
+                            <option value="30">1 Bulan (30 Hari)</option>
+                            <option value="60">2 Bulan (60 Hari)</option>
+                            <option value="365">1 Tahun (365 Hari)</option>
+                        </select>
+                    </div>
+                    <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Kunci Lisensi Dihasilkan</label>
                         <input type="text" id="genLicenseResult" readonly placeholder="Klik Buat Key..." class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-tiktok-rose">
                     </div>
@@ -450,41 +478,22 @@
                         </button>
                     </div>
                 </div>
-            </div>
 
-            <!-- Cookie Pool Manager -->
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-                    <div>
-                        <h3 class="text-sm font-bold text-slate-900 flex items-center">
-                            <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> TikTok Cookie & Session Pool Manager
-                        </h3>
-                        <p class="text-xs text-slate-500">Kelola akun bot pengisi saldo slash event TikTok</p>
-                    </div>
-
-                    <div class="flex items-center space-x-2">
-                        <button onclick="triggerCookieHealthCheck()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
-                            <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Check Cookie Health
-                        </button>
-                        <button onclick="openModal('addCookieModal')" class="px-3 py-1.5 bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
-                            <i class="fa-solid fa-plus mr-1"></i> Tambah Cookie
-                        </button>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
+                <!-- Table Active Generated Licenses -->
+                <div class="overflow-x-auto pt-2">
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
                             <tr>
-                                <th class="py-3 px-4 font-bold">Account Label</th>
-                                <th class="py-3 px-4 font-bold">Session Preview</th>
-                                <th class="py-3 px-4 font-bold">Status Health</th>
-                                <th class="py-3 px-4 font-bold">Slashes Executed</th>
-                                <th class="py-3 px-4 font-bold">Terakhir Dipakai</th>
-                                <th class="py-3 px-4 font-bold text-right">Aksi</th>
+                                <th class="py-2.5 px-3 font-bold">License Key</th>
+                                <th class="py-2.5 px-3 font-bold">Durasi</th>
+                                <th class="py-2.5 px-3 font-bold">Status</th>
+                                <th class="py-2.5 px-3 font-bold">Dibuat Pada</th>
+                                <th class="py-2.5 px-3 font-bold text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="cookieTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                        <tbody id="licenseTableBody" class="divide-y divide-slate-100 font-medium">
+                            <!-- Dynamically injected -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -814,7 +823,10 @@
                         enter_from: 'share_link'
                     },
                     speed: 'turbo',
+                    server_node: 'Node-JKT01',
                     target_price: 100,
+                    initial_price: 150000,
+                    current_price: 100,
                     current_slashes: 10,
                     max_slashes: 10,
                     status: 'completed',
@@ -835,6 +847,10 @@
                 { id: 'ck_3', account_name: 'Bot_Account_Gamma', cookie_preview: 'sessionid=449a0...; region=ID', status: 'rate_limited', total_slashes: 92, last_used: '1 hour ago' },
                 { id: 'ck_4', account_name: 'Bot_Account_Delta', cookie_preview: 'sessionid=773c1...; region=ID', status: 'expired', total_slashes: 310, last_used: '1 day ago' }
             ],
+            generatedLicenses: [
+                { key: 'SLASH-30D-8X92KA12', duration: '30 Hari', status: 'Unclaimed', created_at: '2026-02-08' },
+                { key: 'SLASH-60D-M29P1049', duration: '60 Hari', status: 'Active', created_at: '2026-02-07' }
+            ],
             usersList: [
                 { id: 'usr_admin', email: 'admin', role: 'admin', credits: 999, password: 'admin123', created_at: '2026-01-01' },
                 { id: 'usr_10202', email: 'budi.slash@gmail.com', role: 'user', credits: 25, password: 'user123', created_at: '2026-02-01' },
@@ -843,26 +859,15 @@
             taskFilter: 'all'
         };
 
-        // Standalone variable for Supabase client
         let supabaseClient = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             initSupabaseClient();
             loadLocalState();
             checkAuthAndInit();
+            renderLicensesTable();
             resumePendingTasks();
         });
-
-        function initSupabaseClient() {
-            try {
-                if (window.supabase && typeof window.supabase.createClient === 'function') {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                    console.log("Supabase Client initialized successfully.");
-                }
-            } catch (err) {
-                console.warn("Notice: Operating in offline simulated mode.", err);
-            }
-        }
 
         function checkAuthAndInit() {
             if (!appState.isAuthenticated || !appState.currentUser) {
@@ -873,214 +878,38 @@
                 renderTasksList();
                 renderCookieTable();
                 renderUsersTable();
+                renderLicensesTable();
                 updateAdminStats();
             }
         }
 
-        function handleLoginSubmit(e) {
-            e.preventDefault();
-            const usn = document.getElementById('loginUsername').value.trim().toLowerCase();
-            const pwd = document.getElementById('loginPassword').value.trim();
-
-            const user = appState.usersList.find(u => 
-                (u.email.toLowerCase() === usn || u.email.split('@')[0].toLowerCase() === usn) && 
-                (u.password === pwd)
-            );
-
-            if (user) {
-                appState.currentUser = user;
-                appState.isAuthenticated = true;
-                saveLocalState();
-                checkAuthAndInit();
-                showToast(`Login Berhasil sebagai ${user.email}!`, 'success');
-            } else {
-                showToast('Username/Email atau Password salah!', 'error');
-            }
-        }
-
-        function handleLogout() {
-            appState.isAuthenticated = false;
-            appState.currentUser = null;
-            saveLocalState();
-            showToast('Anda telah keluar dari akun.', 'info');
-            setTimeout(() => location.reload(), 600);
-        }
-
-        function parseTikTokUrl(urlStr) {
-            if (!urlStr || typeof urlStr !== 'string') return null;
-            let trimmed = urlStr.trim();
-            
-            if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://')) {
-                trimmed = 'https://' + trimmed;
-            }
-
-            if (!trimmed.includes('tiktok.com')) return null;
-
-            try {
-                let urlObj = new URL(trimmed);
-                let params = {};
-
-                urlObj.searchParams.forEach((value, key) => {
-                    if (['item_id', 'campaign_id', 'share_user_id', 'enter_from', 'u_code'].includes(key)) {
-                        params[key] = value;
-                    }
-                });
-
-                if (Object.keys(params).length === 0) {
-                    let pathHash = trimmed.split('/').pop() || 'ZSN3x8Y1A';
-                    params = {
-                        item_id: '7' + Math.floor(Math.random() * 899999999 + 100000000),
-                        campaign_id: 'cmp_slash_100',
-                        share_user_id: 'usr_' + pathHash.substring(0, 6),
-                        enter_from: 'event_price_slash'
-                    };
-                }
-
-                return params;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function setFormMode(mode) {
-            appState.formMode = mode;
-            const singleCont = document.getElementById('singleLinkContainer');
-            const batchCont = document.getElementById('batchLinkContainer');
-            const singleBtn = document.getElementById('mode-single-btn');
-            const batchBtn = document.getElementById('mode-batch-btn');
-
-            if (mode === 'single') {
-                singleCont.classList.remove('hidden');
-                batchCont.classList.add('hidden');
-                singleBtn.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
-                batchBtn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
-            } else {
-                singleCont.classList.add('hidden');
-                batchCont.classList.remove('hidden');
-                batchBtn.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
-                singleBtn.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
-            }
-        }
-
-        function liveParseUrl() {
-            const inputVal = document.getElementById('tiktokUrlInput').value;
-            const previewBox = document.getElementById('sanitizerPreviewBox');
-            const container = document.getElementById('parsedParamsContainer');
-
-            if (!inputVal) {
-                previewBox.classList.add('hidden');
-                return;
-            }
-
-            const parsed = parseTikTokUrl(inputVal);
-            if (parsed) {
-                previewBox.classList.remove('hidden');
-                container.innerHTML = Object.entries(parsed).map(([key, val]) => `
-                    <span class="inline-flex items-center bg-white px-2 py-1 rounded border border-slate-200 text-slate-700">
-                        <strong class="text-tiktok-rose mr-1">${key}:</strong> ${val}
-                    </span>
-                `).join('');
-            } else {
-                previewBox.classList.remove('hidden');
-                container.innerHTML = `<span class="text-rose-600 font-sans text-xs">Format URL TikTok tidak valid. Pastikan terdapat domain tiktok.com</span>`;
-            }
-        }
-
-        function clearUrlInput() {
-            document.getElementById('tiktokUrlInput').value = '';
-            document.getElementById('sanitizerPreviewBox').classList.add('hidden');
-        }
-
-        async function pasteFromClipboard() {
-            try {
-                const text = await navigator.clipboard.readText();
-                document.getElementById('tiktokUrlInput').value = text;
-                liveParseUrl();
-                showToast('Link berhasil ditempel dari Clipboard!', 'success');
-            } catch (err) {
-                showToast('Gagal mengakses clipboard. Silakan paste manual.', 'warning');
-            }
-        }
-
-        function handleTaskSubmit(e) {
-            e.preventDefault();
-
-            if (!appState.currentUser || appState.currentUser.credits < 1) {
-                showToast('Kredit Habis! Silakan Top Up Kredit (Rp 25.000 / Rp 50.000).', 'error');
-                triggerCreditDepletedTopUp();
-                return;
-            }
-
-            const speed = document.getElementById('executionSpeedSelect').value;
-            const targetSlashes = parseInt(document.getElementById('targetSlashesSelect').value);
-
-            if (appState.formMode === 'single') {
-                const urlInput = document.getElementById('tiktokUrlInput').value;
-                const parsed = parseTikTokUrl(urlInput);
-
-                if (!parsed) {
-                    showToast('URL TikTok tidak dapat diverifikasi!', 'error');
-                    return;
-                }
-
-                createNewTask(urlInput, parsed, speed, targetSlashes);
-                clearUrlInput();
-            } else {
-                // Batch Multi-Link Submission
-                const batchRaw = document.getElementById('tiktokBatchUrlsInput').value;
-                const urls = batchRaw.split('\n').map(u => u.trim()).filter(u => u.length > 0);
-
-                if (urls.length === 0) {
-                    showToast('Masukkan minimal 1 link TikTok pada kotak batch!', 'error');
-                    return;
-                }
-
-                let countCreated = 0;
-                urls.forEach(url => {
-                    if (appState.currentUser.credits >= 1) {
-                        const parsed = parseTikTokUrl(url);
-                        if (parsed) {
-                            createNewTask(url, parsed, speed, targetSlashes);
-                            countCreated++;
-                        }
-                    } else {
-                        triggerCreditDepletedTopUp();
-                    }
-                });
-
-                document.getElementById('tiktokBatchUrlsInput').value = '';
-                showToast(`Berhasil menambahkan ${countCreated} tugas batch!`, 'success');
-            }
-        }
-
-        function triggerCreditDepletedTopUp() {
-            const warningEl = document.getElementById('creditDepletedWarning');
-            if (warningEl) warningEl.classList.remove('hidden');
-            openModal('topUpModal');
-        }
-
         function createNewTask(url, parsed, speed, targetSlashes) {
-            // Potong kredit langsung ke sisa 5 kredit saat tugas masuk processing
+            // Potong kredit pengguna menjadi sisa 5 kredit
             if (appState.currentUser.credits >= 20) {
-                appState.currentUser.credits -= 20; // 25 kredit awal -> sisa 5 kredit
+                appState.currentUser.credits -= 20;
             } else {
                 appState.currentUser.credits = Math.max(0, appState.currentUser.credits - 1);
             }
+
+            const serverNode = document.getElementById('serverNodeSelect') ? document.getElementById('serverNodeSelect').value : 'Node-JKT01';
             
             const newTask = {
                 id: 'tsk_' + Date.now().toString().slice(-5) + Math.floor(Math.random() * 100),
                 tiktok_url: url,
                 sanitized_params: parsed,
                 speed: speed,
+                server_node: serverNode,
                 target_price: 100,
+                initial_price: 150000,
+                current_price: 150000,
                 current_slashes: 0,
                 max_slashes: targetSlashes,
                 status: 'processing',
                 duration_label: 'Proses 1 Jam Asli',
                 countdown_display: '60:00',
                 logs: [
-                    `[${new Date().toLocaleTimeString()}] Task Dibuat. Kredit berkurang (Sisa: ${appState.currentUser.credits} Kredit).`,
-                    `[${new Date().toLocaleTimeString()}] Memulai timer eksekusi 1 Jam asli ke server TikTok...`
+                    `[${new Date().toLocaleTimeString()}] Task Dibuat via Node ${serverNode}. Sisa Kredit: ${appState.currentUser.credits}.`,
+                    `[${new Date().toLocaleTimeString()}] Memulai timer eksekusi 1 Jam asli (3600 detik) ke server TikTok...`
                 ],
                 created_at: new Date().toISOString()
             };
@@ -1091,26 +920,32 @@
             renderTasksList();
             runTaskExecutionEngine(newTask.id);
 
-            // Tampilkan alert bahwa kredit tersisa 5 dan harus Top Up terlebih dahulu untuk melanjutkan
+            // Tampilkan modal Top Up jika kredit sisa <= 5
             if (appState.currentUser.credits <= 5) {
                 showToast('Kredit Anda sisa 5! Silakan Top Up kredit terlebih dahulu untuk melanjutkan eksekusi.', 'warning');
+                playAudioBeep('warning');
                 setTimeout(() => {
                     triggerCreditDepletedTopUp();
                 }, 1200);
             }
         }
 
-        // Timer 1 Jam Asli (No Simulation Fast Interval)
         function runTaskExecutionEngine(taskId) {
             const task = appState.tasks.find(t => t.id === taskId);
             if (!task || task.status !== 'processing') return;
 
-            const TOTAL_DURATION_SEC = 3600; // 1 Jam Asli (3600 Detik)
+            // Mencegah duplicate interval jika sudah berjalan
+            if (task._timerIntervalId) {
+                clearInterval(task._timerIntervalId);
+            }
 
-            const interval = setInterval(() => {
+            const TOTAL_DURATION_SEC = 3600; // Exact 1 Hour = 3600 seconds
+
+            task._timerIntervalId = setInterval(() => {
                 const currentTask = appState.tasks.find(t => t.id === taskId);
                 if (!currentTask || currentTask.status !== 'processing') {
-                    clearInterval(interval);
+                    clearInterval(task._timerIntervalId);
+                    delete task._timerIntervalId;
                     return;
                 }
 
@@ -1124,35 +959,44 @@
                 const secs = remainingSec % 60;
                 currentTask.countdown_display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
 
-                // Update progres slash secara bertahap dalam kurun waktu 1 jam
+                // Calculate slashes progress proportionally across 1 hour
                 const progressRatio = Math.min(1, elapsedSec / TOTAL_DURATION_SEC);
                 currentTask.current_slashes = Math.min(currentTask.max_slashes, Math.floor(progressRatio * currentTask.max_slashes));
+                
+                // Dynamic Current Price Calculation (Rp 150.000 -> Rp 100 Perak)
+                const priceDropAmount = Math.floor(progressRatio * (currentTask.initial_price - currentTask.target_price));
+                currentTask.current_price = Math.max(currentTask.target_price, currentTask.initial_price - priceDropAmount);
 
                 // Log periodik setiap 6 menit (360 detik)
                 if (elapsedSec > 0 && elapsedSec % 360 === 0 && currentTask.current_slashes > (currentTask.last_logged_slash || 0)) {
                     currentTask.last_logged_slash = currentTask.current_slashes;
                     const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
                     const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
-                    const logMsg = `[${new Date().toLocaleTimeString()}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Timer Sisa: ${currentTask.countdown_display}`;
+                    const logMsg = `[${new Date().toLocaleTimeString()}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Harga Saat Ini: Rp ${currentTask.current_price.toLocaleString('id-ID')} (Timer: ${currentTask.countdown_display})`;
                     currentTask.logs.push(logMsg);
                     appendTerminalLog(logMsg);
                 }
 
+                // Saat 1 Jam Selesai
                 if (elapsedSec >= TOTAL_DURATION_SEC) {
                     currentTask.status = 'completed';
                     currentTask.current_slashes = currentTask.max_slashes;
+                    currentTask.current_price = currentTask.target_price;
                     currentTask.duration_label = 'Selesai (1 Jam)';
                     currentTask.countdown_display = '00:00';
-                    const finalLog = `[${new Date().toLocaleTimeString()}] Eksekusi 1 Jam Selesai! Target Rp 100 Perak Tercapai.`;
+                    const finalLog = `[${new Date().toLocaleTimeString()}] Eksekusi 1 Jam Selesai! Target Harga Rp 100 Perak Tercapai.`;
                     currentTask.logs.push(finalLog);
                     appendTerminalLog(finalLog);
-                    clearInterval(interval);
+                    clearInterval(currentTask._timerIntervalId);
+                    delete currentTask._timerIntervalId;
+                    
+                    playAudioBeep('success');
                     showToast(`Tugas ${currentTask.id} Selesai 1 Jam! Target Rp 100 Perak tercapai.`, 'success');
                 }
 
                 saveLocalState();
                 renderTasksList();
-            }, 1000); // Detik demi detik real-time
+            }, 1000); // Tepat 1 Detik per interval
         }
 
         function resumePendingTasks() {
@@ -1163,116 +1007,86 @@
             }
         }
 
-        function runTaskExecutionEngine(taskId) {
-            const task = appState.tasks.find(t => t.id === taskId);
-            if (!task || task.status !== 'processing') return;
+        function playAudioBeep(type = 'success') {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
 
-            // Simulated 1-Hour processing execution timeline interval
-            const intervalMs = task.speed === 'turbo' ? 2000 : 4000;
-
-            const interval = setInterval(() => {
-                const currentTask = appState.tasks.find(t => t.id === taskId);
-                if (!currentTask || currentTask.status !== 'processing') {
-                    clearInterval(interval);
-                    return;
-                }
-
-                if (currentTask.current_slashes < currentTask.max_slashes) {
-                    currentTask.current_slashes += 1;
-                    
-                    const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
-                    const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
-                    
-                    const timestamp = new Date().toLocaleTimeString();
-                    const logMsg = `[${timestamp}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Harga terpotong Rp ${Math.floor(Math.random() * 2000 + 500)}`;
-                    
-                    currentTask.logs.push(logMsg);
-                    appendTerminalLog(logMsg);
-
-                    if (currentTask.current_slashes >= currentTask.max_slashes) {
-                        currentTask.status = 'completed';
-                        currentTask.duration_label = 'Selesai (1 Jam)';
-                        const finalLog = `[${new Date().toLocaleTimeString()}] Eksekusi 1 Jam Selesai! Target Rp 100 Perak Tercapai.`;
-                        currentTask.logs.push(finalLog);
-                        appendTerminalLog(finalLog);
-                        clearInterval(interval);
-                        showToast(`Tugas ${currentTask.id} Selesai dalam 1 Jam! Target Rp 100 Perak tercapai.`, 'success');
-                    }
-
-                    saveLocalState();
-                    renderTasksList();
+                if (type === 'success') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.3);
                 } else {
-                    clearInterval(interval);
+                    osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.4);
                 }
-            }, intervalMs);
+            } catch(e) {}
         }
 
-        function togglePauseTask(taskId) {
-            const task = appState.tasks.find(t => t.id === taskId);
-            if (!task) return;
+        function generateLicenseKey() {
+            const duration = document.getElementById('genLicenseDuration').value;
+            const randomCode = Math.random().toString(36).substring(2, 10).toUpperCase();
+            const key = `SLASH-${duration}D-${randomCode}`;
+            document.getElementById('genLicenseResult').value = key;
 
-            if (task.status === 'processing') {
-                task.status = 'pending';
-                showToast('Tugas di-pause', 'info');
-            } else if (task.status === 'pending') {
-                task.status = 'processing';
-                showToast('Tugas dilanjutkan (Proses 1 Jam)...', 'info');
-                runTaskExecutionEngine(taskId);
-            }
+            if (!Array.isArray(appState.generatedLicenses)) appState.generatedLicenses = [];
+            
+            appState.generatedLicenses.unshift({
+                key: key,
+                duration: `${duration} Hari`,
+                status: 'Unclaimed',
+                created_at: new Date().toISOString().split('T')[0]
+            });
+
             saveLocalState();
-            renderTasksList();
+            renderLicensesTable();
+            showToast('License Key berhasil dibuat!', 'success');
         }
 
-        function retryTask(taskId) {
-            const task = appState.tasks.find(t => t.id === taskId);
-            if (!task) return;
+        function renderLicensesTable() {
+            const tbody = document.getElementById('licenseTableBody');
+            if (!tbody) return;
 
-            if (appState.currentUser.credits < 1) {
-                showToast('Kredit Habis! Silakan Top Up Kredit (Rp 25.000 / Rp 50.000)', 'error');
-                triggerCreditDepletedTopUp();
+            const licenses = Array.isArray(appState.generatedLicenses) ? appState.generatedLicenses : [];
+            if (licenses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-3 text-center text-slate-400">Belum ada lisensi yang dibuat.</td></tr>`;
                 return;
             }
 
-            task.status = 'processing';
-            task.current_slashes = 0;
-            task.logs.push(`[${new Date().toLocaleTimeString()}] Retry Manual Dicuci. Memulai ulang proses 1 Jam.`);
-            saveLocalState();
-            renderTasksList();
-            runTaskExecutionEngine(taskId);
-            showToast('Memulai ulang proses 1 Jam...', 'info');
+            tbody.innerHTML = licenses.map(l => `
+                <tr class="hover:bg-slate-50">
+                    <td class="py-2.5 px-3 font-mono font-bold text-tiktok-rose">${l.key}</td>
+                    <td class="py-2.5 px-3 font-semibold">${l.duration}</td>
+                    <td class="py-2.5 px-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${l.status === 'Active' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${l.status}
+                        </span>
+                    </td>
+                    <td class="py-2.5 px-3 text-slate-500">${l.created_at}</td>
+                    <td class="py-2.5 px-3 text-right space-x-1">
+                        <button onclick="navigator.clipboard.writeText('${l.key}'); showToast('Key disalin!','success');" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                        <button onclick="deleteLicenseKey('${l.key}')" class="px-2 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function deleteTask(taskId) {
-            appState.tasks = appState.tasks.filter(t => t.id !== taskId);
+        function deleteLicenseKey(key) {
+            appState.generatedLicenses = appState.generatedLicenses.filter(l => l.key !== key);
             saveLocalState();
-            renderTasksList();
-            showToast('Tugas berhasil dihapus', 'info');
-        }
-
-        function exportTaskReportCSV(taskId) {
-            const task = appState.tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            let csvContent = "data:text/csv;charset=utf-8,Timestamp,Log Description\n";
-            task.logs.forEach(log => {
-                csvContent += `"${log.substring(0,10)}","${log.replace(/"/g, '""')}"\n`;
-            });
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", `slash_report_${taskId}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            showToast('Laporan CSV berhasil diunduh', 'success');
-        }
-
-        function clearCompletedTasks() {
-            appState.tasks = appState.tasks.filter(t => t.status !== 'completed');
-            saveLocalState();
-            renderTasksList();
-            showToast('Tugas selesai telah dibersihkan', 'info');
+            renderLicensesTable();
+            showToast('Lisensi dihapus.', 'info');
         }
 
         function renderTasksList() {
@@ -1297,6 +1111,7 @@
 
             container.innerHTML = filtered.map(task => {
                 const percent = Math.round((task.current_slashes / task.max_slashes) * 100);
+                const currentPriceFormatted = (task.current_price || 100).toLocaleString('id-ID');
                 
                 let statusBadge = '';
                 if (task.status === 'processing') {
@@ -1313,14 +1128,17 @@
                     <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 space-y-3 hover:border-slate-300 transition-colors">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                             <div class="space-y-0.5">
-                                <div class="flex items-center space-x-2">
+                                <div class="flex flex-wrap items-center gap-2">
                                     <span class="text-xs font-extrabold text-slate-900">${task.id}</span>
                                     ${statusBadge}
                                     <span class="text-xs font-mono font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
                                         <i class="fa-regular fa-clock mr-1"></i> Sisa Waktu: ${task.countdown_display || '60:00'}
                                     </span>
+                                    <span class="text-[10px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded font-mono font-semibold">
+                                        ${task.server_node || 'Node-JKT01'}
+                                    </span>
                                 </div>
-                                <div class="text-xs text-slate-600 truncate max-w-md font-mono">${task.tiktok_url}</div>
+                                <div class="text-xs text-slate-600 truncate max-w-md font-mono pt-1">${task.tiktok_url}</div>
                             </div>
 
                             <div class="flex items-center space-x-1.5 self-end sm:self-auto">
@@ -1339,6 +1157,17 @@
                                 <button onclick="deleteTask('${task.id}')" class="px-2 py-1 text-xs font-semibold bg-white border border-slate-200 rounded-lg hover:bg-rose-50 text-rose-600" title="Delete">
                                     <i class="fa-solid fa-trash-can"></i>
                                 </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Price Cutting Indicator -->
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
+                            <span class="text-slate-500">Estimasi Harga Event Saat Ini:</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="line-through text-slate-400 font-mono">Rp 150.000</span>
+                                <i class="fa-solid fa-arrow-right text-tiktok-rose text-[10px]"></i>
+                                <span class="font-bold text-emerald-600 font-mono text-sm">Rp ${currentPriceFormatted}</span>
+                                <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200">Target: Rp 100</span>
                             </div>
                         </div>
 
