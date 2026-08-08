@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Event Price Slash Engine (100 Perak)</title>
+    <title>GaneMax Bot TikTok (100 Perak)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -83,7 +83,7 @@
                     </div>
                     <div>
                         <div class="flex items-center space-x-2">
-                            <h1 class="text-lg font-bold text-slate-900 tracking-tight">SlashBot <span class="text-tiktok-rose">TikTok</span></h1>
+                            <h1 class="text-lg font-bold text-slate-900 tracking-tight">GaneMax <span class="text-tiktok-rose">Bot TikTok</span></h1>
                             <span class="text-[10px] font-semibold bg-rose-50 text-tiktok-rose border border-rose-200 px-2 py-0.5 rounded-full">v2.5 Enterprise</span>
                         </div>
                         <p class="text-xs text-slate-500 hidden sm:block">Engine Pemotong Harga Event 100 Perak</p>
@@ -180,9 +180,9 @@
                             </span>
                             <span class="text-xs text-slate-400">Pool Cookie Account: <strong id="activeCookiesCountBadge" class="text-white">12 Cookie Ready</strong></span>
                         </div>
-                        <h2 class="text-xl font-extrabold tracking-tight">Bot Pemotong Harga Event TikTok (100 Perak)</h2>
+                        <h2 class="text-xl font-extrabold tracking-tight">GaneMax Bot TikTok (100 Perak)</h2>
                         <p class="text-xs text-slate-300 max-w-2xl">
-                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Estimasi durasi pemotongan adalah <strong>1 Jam</strong> dengan sistem otomatis.
+                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Estimasi durasi pemotongan adalah <strong>1 Jam Asli</strong> dengan timer penghitung waktu mundur otomatis.
                         </p>
                     </div>
 
@@ -538,7 +538,7 @@
                         onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full bg-gradient-to-tr from-tiktok-rose to-tiktok-cyan p-0.5 flex items-center justify-center\'><div class=\'w-full h-full bg-white rounded-[14px] flex items-center justify-center\'><i class=\'fa-brands fa-tiktok text-tiktok-rose text-2xl\'></i></div></div>';"
                     />
                 </div>
-                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Login SlashBot Engine TikTok</h3>
+                <h3 class="text-xl font-extrabold text-slate-900 tracking-tight">Login GaneMax Bot TikTok</h3>
                 <p class="text-xs text-slate-500">Masukkan kredensial akun Anda untuk mengakses sistem pemotong harga event</p>
             </div>
 
@@ -565,7 +565,7 @@
             <div class="space-y-3">
                 <div class="text-center">
                     <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-center">
-                        <i class="fa-solid fa-tags text-tiktok-rose mr-1.5"></i> Beli Lisensi Bot Pemotong Harga Event TikTok (100 Perak)
+                        <i class="fa-solid fa-tags text-tiktok-rose mr-1.5"></i> Beli Lisensi GaneMax Bot TikTok (100 Perak)
                     </h4>
                     <p class="text-[11px] text-slate-500">Belum punya lisensi? Pilih paket lisensi bot di bawah untuk pendaftaran akun baru:</p>
                 </div>
@@ -802,7 +802,7 @@
             isAuthenticated: false,
             currentUser: null,
             activeTab: 'dashboard',
-            formMode: 'single', // 'single' or 'batch'
+            formMode: 'single',
             tasks: [
                 {
                     id: 'tsk_101',
@@ -819,8 +819,9 @@
                     max_slashes: 10,
                     status: 'completed',
                     duration_label: 'Selesai (1 Jam)',
+                    countdown_display: '00:00',
                     logs: [
-                        '[10:00:00] Memulai antrean proses eksekusi 1 Jam...',
+                        '[10:00:00] Memulai eksekusi timer 1 Jam asli...',
                         '[10:15:00] Session Cookie #1 terpasang...',
                         '[10:30:05] Slash #5 berhasil! Pemotongan harga berlangsung.',
                         '[11:00:00] Slash #10 berhasil! Target Rp 100 Perak tercapai!'
@@ -836,8 +837,8 @@
             ],
             usersList: [
                 { id: 'usr_admin', email: 'admin', role: 'admin', credits: 999, password: 'admin123', created_at: '2026-01-01' },
-                { id: 'usr_10202', email: 'budi.slash@gmail.com', role: 'user', credits: 15, password: 'user123', created_at: '2026-02-01' },
-                { id: 'usr_30401', email: 'siti.event@yahoo.com', role: 'user', credits: 40, password: 'user123', created_at: '2026-02-03' }
+                { id: 'usr_10202', email: 'budi.slash@gmail.com', role: 'user', credits: 25, password: 'user123', created_at: '2026-02-01' },
+                { id: 'usr_30401', email: 'siti.event@yahoo.com', role: 'user', credits: 25, password: 'user123', created_at: '2026-02-03' }
             ],
             taskFilter: 'all'
         };
@@ -1059,7 +1060,12 @@
         }
 
         function createNewTask(url, parsed, speed, targetSlashes) {
-            appState.currentUser.credits -= 1;
+            // Potong kredit langsung ke sisa 5 kredit saat tugas masuk processing
+            if (appState.currentUser.credits >= 20) {
+                appState.currentUser.credits -= 20; // 25 kredit awal -> sisa 5 kredit
+            } else {
+                appState.currentUser.credits = Math.max(0, appState.currentUser.credits - 1);
+            }
             
             const newTask = {
                 id: 'tsk_' + Date.now().toString().slice(-5) + Math.floor(Math.random() * 100),
@@ -1070,10 +1076,11 @@
                 current_slashes: 0,
                 max_slashes: targetSlashes,
                 status: 'processing',
-                duration_label: 'Proses 1 Jam',
+                duration_label: 'Proses 1 Jam Asli',
+                countdown_display: '60:00',
                 logs: [
-                    `[${new Date().toLocaleTimeString()}] Task Dibuat. Kredit berkurang 1.`,
-                    `[${new Date().toLocaleTimeString()}] Menginisialisasi proses eksekusi 1 Jam ke server TikTok...`
+                    `[${new Date().toLocaleTimeString()}] Task Dibuat. Kredit berkurang (Sisa: ${appState.currentUser.credits} Kredit).`,
+                    `[${new Date().toLocaleTimeString()}] Memulai timer eksekusi 1 Jam asli ke server TikTok...`
                 ],
                 created_at: new Date().toISOString()
             };
@@ -1084,9 +1091,68 @@
             renderTasksList();
             runTaskExecutionEngine(newTask.id);
 
-            if (appState.currentUser.credits === 0) {
-                showToast('Kredit Anda sekarang 0. Silakan isi ulang kredit.', 'warning');
+            // Tampilkan alert bahwa kredit tersisa 5 dan harus Top Up terlebih dahulu untuk melanjutkan
+            if (appState.currentUser.credits <= 5) {
+                showToast('Kredit Anda sisa 5! Silakan Top Up kredit terlebih dahulu untuk melanjutkan eksekusi.', 'warning');
+                setTimeout(() => {
+                    triggerCreditDepletedTopUp();
+                }, 1200);
             }
+        }
+
+        // Timer 1 Jam Asli (No Simulation Fast Interval)
+        function runTaskExecutionEngine(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task || task.status !== 'processing') return;
+
+            const TOTAL_DURATION_SEC = 3600; // 1 Jam Asli (3600 Detik)
+
+            const interval = setInterval(() => {
+                const currentTask = appState.tasks.find(t => t.id === taskId);
+                if (!currentTask || currentTask.status !== 'processing') {
+                    clearInterval(interval);
+                    return;
+                }
+
+                const now = Date.now();
+                const startTime = new Date(currentTask.created_at).getTime();
+                const elapsedSec = Math.floor((now - startTime) / 1000);
+                const remainingSec = Math.max(0, TOTAL_DURATION_SEC - elapsedSec);
+
+                // Format Countdown Timer (MM:SS)
+                const mins = Math.floor(remainingSec / 60);
+                const secs = remainingSec % 60;
+                currentTask.countdown_display = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+                // Update progres slash secara bertahap dalam kurun waktu 1 jam
+                const progressRatio = Math.min(1, elapsedSec / TOTAL_DURATION_SEC);
+                currentTask.current_slashes = Math.min(currentTask.max_slashes, Math.floor(progressRatio * currentTask.max_slashes));
+
+                // Log periodik setiap 6 menit (360 detik)
+                if (elapsedSec > 0 && elapsedSec % 360 === 0 && currentTask.current_slashes > (currentTask.last_logged_slash || 0)) {
+                    currentTask.last_logged_slash = currentTask.current_slashes;
+                    const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
+                    const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
+                    const logMsg = `[${new Date().toLocaleTimeString()}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Timer Sisa: ${currentTask.countdown_display}`;
+                    currentTask.logs.push(logMsg);
+                    appendTerminalLog(logMsg);
+                }
+
+                if (elapsedSec >= TOTAL_DURATION_SEC) {
+                    currentTask.status = 'completed';
+                    currentTask.current_slashes = currentTask.max_slashes;
+                    currentTask.duration_label = 'Selesai (1 Jam)';
+                    currentTask.countdown_display = '00:00';
+                    const finalLog = `[${new Date().toLocaleTimeString()}] Eksekusi 1 Jam Selesai! Target Rp 100 Perak Tercapai.`;
+                    currentTask.logs.push(finalLog);
+                    appendTerminalLog(finalLog);
+                    clearInterval(interval);
+                    showToast(`Tugas ${currentTask.id} Selesai 1 Jam! Target Rp 100 Perak tercapai.`, 'success');
+                }
+
+                saveLocalState();
+                renderTasksList();
+            }, 1000); // Detik demi detik real-time
         }
 
         function resumePendingTasks() {
@@ -1234,7 +1300,7 @@
                 
                 let statusBadge = '';
                 if (task.status === 'processing') {
-                    statusBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg animate-pulse flex items-center"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> PROSES 1 JAM (${percent}%)</span>`;
+                    statusBadge = `<span class="px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200 font-bold rounded-lg animate-pulse flex items-center"><i class="fa-solid fa-spinner fa-spin mr-1.5"></i> PROSES 1 JAM (${task.countdown_display || '60:00'})</span>`;
                 } else if (task.status === 'completed') {
                     statusBadge = `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-check mr-1.5"></i> SELESAI (1 JAM)</span>`;
                 } else if (task.status === 'pending') {
@@ -1250,7 +1316,9 @@
                                 <div class="flex items-center space-x-2">
                                     <span class="text-xs font-extrabold text-slate-900">${task.id}</span>
                                     ${statusBadge}
-                                    <span class="text-[10px] text-slate-400 font-mono">${new Date(task.created_at).toLocaleTimeString()}</span>
+                                    <span class="text-xs font-mono font-bold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-0.5 rounded">
+                                        <i class="fa-regular fa-clock mr-1"></i> Sisa Waktu: ${task.countdown_display || '60:00'}
+                                    </span>
                                 </div>
                                 <div class="text-xs text-slate-600 truncate max-w-md font-mono">${task.tiktok_url}</div>
                             </div>
