@@ -86,7 +86,7 @@
                             <h1 class="text-lg font-bold text-slate-900 tracking-tight">GaneMax <span class="text-tiktok-rose">Bot TikTok</span></h1>
                             <span class="text-[10px] font-semibold bg-rose-50 text-tiktok-rose border border-rose-200 px-2 py-0.5 rounded-full">v2.5 Enterprise</span>
                         </div>
-                        <p class="text-xs text-slate-500 hidden sm:block">Engine Pemotong Harga Event 100 Perak</p>
+                        <p class="text-xs text-slate-500 hidden sm:block">Engine Pemotong Harga Event 100 Perak (1,000 Worker Cluster)</p>
                     </div>
                 </div>
 
@@ -178,22 +178,22 @@
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-ping"></span> Realtime Engine Active
                             </span>
-                            <span class="text-xs text-slate-400">Pool Cookie Account: <strong id="activeCookiesCountBadge" class="text-white">12 Cookie Ready</strong></span>
+                            <span class="text-xs text-slate-400">Pool Bot Cluster: <strong id="activeCookiesCountBadge" class="text-white">1,000 Worker Bot Online</strong></span>
                         </div>
                         <h2 class="text-xl font-extrabold tracking-tight">GaneMax Bot TikTok (100 Perak)</h2>
                         <p class="text-xs text-slate-300 max-w-2xl">
-                            Masukkan link event TikTok Slash/Potong Harga Anda di bawah ini. Estimasi durasi pemotongan adalah <strong>1 Jam Asli</strong> dengan timer penghitung waktu mundur otomatis.
+                            Masukkan link event TikTok Slash/Potong Harga beserta estimasi harga awal barang Anda. Timer penghitung waktu mundur berjalan **1 Jam Asli** dengan bantuan 1.000 worker bot aktif.
                         </p>
                     </div>
 
                     <div class="flex items-center space-x-3 self-start md:self-auto">
                         <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10 min-w-[100px]">
-                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Sukses Hari Ini</div>
-                            <div id="statSlashesToday" class="text-lg font-bold text-white">1,420</div>
+                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Worker Active</div>
+                            <div class="text-lg font-bold text-tiktok-cyan">1,000 Bots</div>
                         </div>
                         <div class="bg-white/10 backdrop-blur-md rounded-xl p-3 text-center border border-white/10 min-w-[100px]">
-                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Est. Hemat Rp</div>
-                            <div id="statTotalSavings" class="text-lg font-bold text-emerald-400">Rp 4.25M</div>
+                            <div class="text-[10px] text-slate-300 uppercase tracking-wider font-medium">Sukses Hari Ini</div>
+                            <div id="statSlashesToday" class="text-lg font-bold text-white">4,890</div>
                         </div>
                     </div>
                 </div>
@@ -261,6 +261,37 @@
                         ></textarea>
                     </div>
 
+                    <!-- Custom Price Estimator Section -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                <i class="fa-solid fa-tag text-tiktok-rose mr-1"></i> Harga Awal Barang Event (Rp)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-xs font-bold text-slate-400">Rp</span>
+                                <input 
+                                    type="number" 
+                                    id="initialPriceInput" 
+                                    value="150000" 
+                                    min="1000" 
+                                    step="1000"
+                                    oninput="calculatePriceEstimate()"
+                                    class="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose"
+                                />
+                            </div>
+                            <span class="text-[10px] text-slate-500">Masukkan harga normal sebelum pemotongan</span>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Estimasi Pemotongan per Slash</label>
+                            <div class="bg-white border border-slate-200 rounded-xl p-2 flex items-center justify-between">
+                                <span id="estimatePerSlashDisplay" class="text-xs font-extrabold text-emerald-600 font-mono">Rp 14.990 / Slash</span>
+                                <span id="estimatePercentageDisplay" class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full">Diskon 99.9%</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500">Estimasi harga akhir: <strong class="text-tiktok-rose">Rp 100 Perak</strong></span>
+                        </div>
+                    </div>
+
                     <!-- Sanitizer Result Box -->
                     <div id="sanitizerPreviewBox" class="hidden bg-slate-50 rounded-xl p-3 border border-slate-200 space-y-2">
                         <div class="flex items-center justify-between">
@@ -287,13 +318,13 @@
                             <label class="block text-xs font-semibold text-slate-700">Modus Kecepatan Eksekusi</label>
                             <select id="executionSpeedSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
                                 <option value="normal">Normal Mode (Durasi 1 Jam - Stable)</option>
-                                <option value="turbo" selected>Turbo Priority (Durasi 1 Jam - High Success)</option>
+                                <option value="turbo" selected>Turbo Priority (1,000 Bot Cluster)</option>
                             </select>
                         </div>
 
                         <div class="space-y-1">
                             <label class="block text-xs font-semibold text-slate-700">Jumlah Target Slash (Potong)</label>
-                            <select id="targetSlashesSelect" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
+                            <select id="targetSlashesSelect" onchange="calculatePriceEstimate()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-tiktok-rose/20 focus:border-tiktok-rose">
                                 <option value="5">5 Slash Attempts (Rp 100 Perak)</option>
                                 <option value="10" selected>10 Slash Attempts (Standard Event)</option>
                                 <option value="20">20 Slash Attempts (Max Power)</option>
@@ -316,7 +347,7 @@
                         <h3 class="text-sm font-bold text-slate-900 flex items-center">
                             <i class="fa-solid fa-list-check text-sky-500 mr-2"></i> Antrean & Status Tugas Slash
                         </h3>
-                        <p class="text-xs text-slate-500">Pemantauan status eksekusi secara real-time (Durasi Proses 1 Jam)</p>
+                        <p class="text-xs text-slate-500">Pemantauan status eksekusi secara real-time (Timer 1 Jam Asli)</p>
                     </div>
 
                     <div class="flex items-center space-x-2">
@@ -334,7 +365,6 @@
                 <div id="tasksListContainer" class="space-y-4"></div>
             </div>
 
-            <!-- Live Terminal Widget -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div class="bg-slate-900 text-slate-200 px-5 py-3 flex items-center justify-between">
                     <div class="flex items-center space-x-2">
@@ -344,7 +374,7 @@
                             <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                         </div>
                         <i class="fa-solid fa-terminal text-tiktok-cyan text-xs"></i>
-                        <span class="text-xs font-mono font-bold tracking-wide">Live Execution Terminal Logs</span>
+                        <span class="text-xs font-mono font-bold tracking-wide">Live Execution Terminal Logs (1,000 Worker Cluster)</span>
                     </div>
 
                     <div class="flex items-center space-x-2 text-xs">
@@ -358,7 +388,7 @@
                 </div>
 
                 <div id="terminalConsole" class="bg-slate-950 p-4 font-mono text-xs text-slate-300 h-52 overflow-y-auto space-y-1 select-text border-t border-slate-800">
-                    <div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized. Listening for new event links...</div>
+                    <div class="text-slate-500">[SYSTEM READY] Realtime 1,000 Worker Bot Cluster Initialized. Listening for new event links...</div>
                 </div>
             </div>
 
@@ -373,7 +403,7 @@
                     </div>
                     <div>
                         <h2 class="text-base font-bold text-slate-900">Admin Control Center</h2>
-                        <p class="text-xs text-slate-500">Kelola cookie pool TikTok, limit kredit pengguna, dan buat Kunci Lisensi</p>
+                        <p class="text-xs text-slate-500">Kelola 1.000 worker cookie pool, limit kredit pengguna, dan Kunci Lisensi</p>
                     </div>
                 </div>
                 <span class="px-3 py-1 bg-sky-100 text-sky-800 font-bold text-xs rounded-full border border-sky-200">
@@ -385,12 +415,12 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
                     <div class="flex items-center justify-between text-slate-500 text-xs font-semibold">
-                        <span>Active Cookie Accounts</span>
-                        <i class="fa-solid fa-cookie text-amber-500"></i>
+                        <span>Active Bot Cluster</span>
+                        <i class="fa-solid fa-robot text-amber-500"></i>
                     </div>
-                    <div id="adminStatCookies" class="text-2xl font-extrabold text-slate-900">12 / 15</div>
+                    <div id="adminStatCookies" class="text-2xl font-extrabold text-slate-900">1,000 / 1,000</div>
                     <div class="text-[11px] text-emerald-600 font-medium">
-                        <i class="fa-solid fa-circle-check mr-1"></i> 80% Pool Health
+                        <i class="fa-solid fa-circle-check mr-1"></i> 100% Cluster Health
                     </div>
                 </div>
 
@@ -399,9 +429,9 @@
                         <span>Total Slash Executed</span>
                         <i class="fa-solid fa-scissors text-tiktok-rose"></i>
                     </div>
-                    <div id="adminStatTotalSlashes" class="text-2xl font-extrabold text-slate-900">4,890</div>
+                    <div id="adminStatTotalSlashes" class="text-2xl font-extrabold text-slate-900">12,890</div>
                     <div class="text-[11px] text-slate-500 font-medium">
-                        <i class="fa-solid fa-chart-line text-sky-500 mr-1"></i> +320 Hari ini
+                        <i class="fa-solid fa-chart-line text-sky-500 mr-1"></i> +820 Hari ini
                     </div>
                 </div>
 
@@ -421,13 +451,14 @@
                         <span>Success Rate Engine</span>
                         <i class="fa-solid fa-square-check text-emerald-500"></i>
                     </div>
-                    <div id="adminStatSuccessRate" class="text-2xl font-extrabold text-emerald-600">97.4%</div>
+                    <div id="adminStatSuccessRate" class="text-2xl font-extrabold text-emerald-600">99.2%</div>
                     <div class="text-[11px] text-slate-500 font-medium">
                         Anti-Captcha Engine Active
                     </div>
                 </div>
             </div>
 
+            <!-- License Management -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-100 pb-3">
                     <h3 class="text-sm font-bold text-slate-900 flex items-center">
@@ -475,22 +506,22 @@
                 </div>
             </div>
 
-            <!-- Cookie Manager Table -->
+            <!-- Worker Bot Cluster Table -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
                     <div>
                         <h3 class="text-sm font-bold text-slate-900 flex items-center">
-                            <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> TikTok Cookie & Session Pool Manager
+                            <i class="fa-solid fa-robot text-amber-500 mr-2"></i> 1,000 Worker Bot Cluster & Session Pool
                         </h3>
                         <p class="text-xs text-slate-500">Kelola akun bot pengisi saldo slash event TikTok</p>
                     </div>
 
                     <div class="flex items-center space-x-2">
                         <button onclick="triggerCookieHealthCheck()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-lg transition-colors">
-                            <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Check Cookie Health
+                            <i class="fa-solid fa-heart-pulse text-rose-500 mr-1.5"></i> Check Cluster Health
                         </button>
                         <button onclick="openModal('addCookieModal')" class="px-3 py-1.5 bg-tiktok-rose hover:bg-tiktok-roseHover text-white text-xs font-bold rounded-lg shadow-sm transition-colors">
-                            <i class="fa-solid fa-plus mr-1"></i> Tambah Cookie
+                            <i class="fa-solid fa-plus mr-1"></i> Tambah Bot Worker
                         </button>
                     </div>
                 </div>
@@ -499,7 +530,7 @@
                     <table class="w-full text-left text-xs">
                         <thead class="bg-slate-50 text-slate-600 border-y border-slate-200 uppercase tracking-wider">
                             <tr>
-                                <th class="py-3 px-4 font-bold">Account Label</th>
+                                <th class="py-3 px-4 font-bold">Worker Node Label</th>
                                 <th class="py-3 px-4 font-bold">Session Preview</th>
                                 <th class="py-3 px-4 font-bold">Status Health</th>
                                 <th class="py-3 px-4 font-bold">Slashes Executed</th>
@@ -564,7 +595,6 @@
                 <p class="text-xs text-slate-500">Masukkan kredensial akun Anda untuk mengakses sistem pemotong harga event</p>
             </div>
 
-            <!-- Login Form -->
             <form onsubmit="handleLoginSubmit(event)" class="space-y-4 max-w-md mx-auto">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Username / Email</label>
@@ -583,7 +613,6 @@
 
             <div class="border-t border-slate-200 my-4"></div>
 
-            <!-- Buy License Section -->
             <div class="space-y-3">
                 <div class="text-center">
                     <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-center">
@@ -638,9 +667,10 @@
                 </button>
             </div>
 
-            <div id="creditDepletedWarning" class="hidden bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-700 font-semibold flex items-center">
-                <i class="fa-solid fa-circle-exclamation text-rose-500 text-base mr-2"></i>
-                <span>Kredit Anda Habis! Silakan lakukan Top Up Kredit untuk melanjutkan eksekusi bot.</span>
+            <!-- Depleted Credit Alert -->
+            <div id="creditDepletedWarning" class="bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-700 font-semibold flex items-center">
+                <i class="fa-solid fa-circle-exclamation text-rose-500 text-base mr-2 flex-shrink-0"></i>
+                <span>Kredit Habis / Kurang! Eksekusi bot dihentikan otomatis. Silakan lakukan Top Up Kredit untuk melanjutkan.</span>
             </div>
 
             <p class="text-xs text-slate-600">
@@ -741,12 +771,12 @@
         </div>
     </div>
 
-    <!-- ADD COOKIE MODAL -->
+    <!-- ADD COOKIE / WORKER MODAL -->
     <div id="addCookieModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center hidden p-4">
         <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
             <div class="flex justify-between items-center border-b border-slate-100 pb-3">
                 <h3 class="text-sm font-bold text-slate-900 flex items-center">
-                    <i class="fa-solid fa-cookie text-amber-500 mr-2"></i> Tambah TikTok Session Cookie
+                    <i class="fa-solid fa-robot text-amber-500 mr-2"></i> Tambah Worker Bot Node / TikTok Cookie
                 </h3>
                 <button onclick="closeModal('addCookieModal')" class="text-slate-400 hover:text-slate-600">
                     <i class="fa-solid fa-xmark"></i>
@@ -755,8 +785,8 @@
 
             <form onsubmit="handleAddCookieSubmit(event)" class="space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Label / Nama Akun</label>
-                    <input type="text" id="cookieAccountName" required placeholder="Contoh: Bot_Account_09" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Label / Nama Worker Bot</label>
+                    <input type="text" id="cookieAccountName" required placeholder="Contoh: Worker_Bot_Node_1001" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-medium">
                 </div>
 
                 <div>
@@ -766,7 +796,7 @@
 
                 <div class="pt-2 flex justify-end space-x-2">
                     <button type="button" onclick="closeModal('addCookieModal')" class="px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl">Batal</button>
-                    <button type="submit" class="px-4 py-2 bg-tiktok-rose text-white text-xs font-bold rounded-xl shadow-sm hover:bg-tiktok-roseHover">Simpan Cookie</button>
+                    <button type="submit" class="px-4 py-2 bg-tiktok-rose text-white text-xs font-bold rounded-xl shadow-sm hover:bg-tiktok-roseHover">Simpan Worker</button>
                 </div>
             </form>
         </div>
@@ -844,18 +874,18 @@
                     countdown_display: '00:00',
                     logs: [
                         '[10:00:00] Memulai eksekusi timer 1 Jam asli...',
-                        '[10:15:00] Session Cookie #1 terpasang...',
-                        '[10:30:05] Slash #5 berhasil! Pemotongan harga berlangsung.',
-                        '[11:00:00] Slash #10 berhasil! Target Rp 100 Perak tercapai!'
+                        '[10:15:00] [Worker_Bot_#012] Session Cookie terpasang...',
+                        '[10:30:05] [Worker_Bot_#088] Slash #5 berhasil! Pemotongan harga berlangsung.',
+                        '[11:00:00] [Worker_Bot_#902] Slash #10 berhasil! Target Rp 100 Perak tercapai!'
                     ],
                     created_at: new Date(Date.now() - 3600000).toISOString()
                 }
             ],
             cookiePool: [
-                { id: 'ck_1', account_name: 'Bot_Account_Alpha', cookie_preview: 'sessionid=902f8...; region=ID', status: 'active', total_slashes: 180, last_used: '2 mins ago' },
-                { id: 'ck_2', account_name: 'Bot_Account_Beta', cookie_preview: 'sessionid=118d2...; region=ID', status: 'active', total_slashes: 145, last_used: '5 mins ago' },
-                { id: 'ck_3', account_name: 'Bot_Account_Gamma', cookie_preview: 'sessionid=449a0...; region=ID', status: 'rate_limited', total_slashes: 92, last_used: '1 hour ago' },
-                { id: 'ck_4', account_name: 'Bot_Account_Delta', cookie_preview: 'sessionid=773c1...; region=ID', status: 'expired', total_slashes: 310, last_used: '1 day ago' }
+                { id: 'ck_1', account_name: 'Worker_Cluster_Alpha (250 Bots)', cookie_preview: 'sessionid=902f8...; cluster=JKT', status: 'active', total_slashes: 1280, last_used: '1 min ago' },
+                { id: 'ck_2', account_name: 'Worker_Cluster_Beta (250 Bots)', cookie_preview: 'sessionid=118d2...; cluster=JKT', status: 'active', total_slashes: 1145, last_used: '2 mins ago' },
+                { id: 'ck_3', account_name: 'Worker_Cluster_Gamma (250 Bots)', cookie_preview: 'sessionid=449a0...; cluster=SGP', status: 'active', total_slashes: 992, last_used: '5 mins ago' },
+                { id: 'ck_4', account_name: 'Worker_Cluster_Delta (250 Bots)', cookie_preview: 'sessionid=773c1...; cluster=USA', status: 'active', total_slashes: 1310, last_used: '3 mins ago' }
             ],
             generatedLicenses: [
                 { key: 'SLASH-30D-8X92KA12', duration: '30 Hari', status: 'Unclaimed', created_at: '2026-02-08' },
@@ -925,6 +955,7 @@
                 renderUsersTable();
                 renderLicensesTable();
                 updateAdminStats();
+                calculatePriceEstimate();
             }
         }
 
@@ -958,6 +989,26 @@
             } catch (e) {
                 return null;
             }
+        }
+
+        function calculatePriceEstimate() {
+            const initialPriceInput = document.getElementById('initialPriceInput');
+            const targetSlashesSelect = document.getElementById('targetSlashesSelect');
+            const displayPerSlash = document.getElementById('estimatePerSlashDisplay');
+            const displayPercentage = document.getElementById('estimatePercentageDisplay');
+
+            if (!initialPriceInput || !targetSlashesSelect || !displayPerSlash) return;
+
+            const initialPrice = parseFloat(initialPriceInput.value) || 150000;
+            const slashes = parseInt(targetSlashesSelect.value) || 10;
+            const targetPrice = 100;
+
+            const totalDropNeeded = Math.max(0, initialPrice - targetPrice);
+            const dropPerSlash = Math.round(totalDropNeeded / slashes);
+            const dropPercent = (((initialPrice - targetPrice) / initialPrice) * 100).toFixed(1);
+
+            displayPerSlash.innerText = `Rp ${dropPerSlash.toLocaleString('id-ID')} / Slash`;
+            displayPercentage.innerText = `Diskon ${dropPercent}%`;
         }
 
         function liveParseUrl() {
@@ -1023,13 +1074,17 @@
         function handleTaskSubmit(e) {
             e.preventDefault();
 
+            // Strict Credit Depletion Guard
             if (!appState.currentUser || appState.currentUser.credits < 1) {
+                showToast('Kredit Anda Habis! Silakan lakukan Top Up Kredit untuk eksekusi bot.', 'error');
+                playAudioBeep('error');
                 triggerCreditDepletedTopUp();
                 return;
             }
 
             const speed = document.getElementById('executionSpeedSelect').value;
             const targetSlashes = parseInt(document.getElementById('targetSlashesSelect').value);
+            const initialPrice = parseFloat(document.getElementById('initialPriceInput').value) || 150000;
 
             if (appState.formMode === 'single') {
                 const urlInput = document.getElementById('tiktokUrlInput').value;
@@ -1041,7 +1096,7 @@
                     return;
                 }
 
-                createNewTask(urlInput, parsed, speed, targetSlashes);
+                createNewTask(urlInput, parsed, speed, targetSlashes, initialPrice);
                 clearUrlInput();
             } else {
                 const batchText = document.getElementById('tiktokBatchUrlsInput').value.trim();
@@ -1055,7 +1110,7 @@
                 lines.forEach(line => {
                     const parsed = parseTikTokUrl(line);
                     if (parsed && appState.currentUser.credits >= 1) {
-                        createNewTask(line, parsed, speed, targetSlashes);
+                        createNewTask(line, parsed, speed, targetSlashes, initialPrice);
                     }
                 });
 
@@ -1066,8 +1121,8 @@
             playAudioBeep('success');
         }
 
-        function createNewTask(url, parsed, speed, targetSlashes) {
-            // Kurangi saldo kredit pengguna
+        function createNewTask(url, parsed, speed, targetSlashes, initialPrice) {
+            // Deduct credits with auto-depletion safety
             if (appState.currentUser.credits >= 20) {
                 appState.currentUser.credits -= 20;
             } else {
@@ -1083,15 +1138,15 @@
                 speed: speed,
                 server_node: serverNode,
                 target_price: 100,
-                initial_price: 150000,
-                current_price: 150000,
+                initial_price: initialPrice,
+                current_price: initialPrice,
                 current_slashes: 0,
                 max_slashes: targetSlashes,
                 status: 'processing',
                 duration_label: 'Proses 1 Jam Asli',
                 countdown_display: '60:00',
                 logs: [
-                    `[${new Date().toLocaleTimeString()}] Task Dibuat via Node ${serverNode}. Sisa Kredit: ${appState.currentUser.credits}.`,
+                    `[${new Date().toLocaleTimeString()}] Task Dibuat via 1,000 Worker Bot Cluster (${serverNode}). Sisa Kredit: ${appState.currentUser.credits}.`,
                     `[${new Date().toLocaleTimeString()}] Memulai timer eksekusi 1 Jam asli (3600 detik) ke server TikTok...`
                 ],
                 created_at: new Date().toISOString()
@@ -1103,12 +1158,15 @@
             renderTasksList();
             runTaskExecutionEngine(newTask.id);
 
-            if (appState.currentUser.credits <= 5) {
-                showToast('Kredit Anda sisa 5! Silakan Top Up kredit terlebih dahulu untuk melanjutkan eksekusi.', 'warning');
+            // Trigger credit alert if balance is low or zero
+            if (appState.currentUser.credits <= 0) {
+                showToast('Kredit Anda Habis! Silakan lakukan Top Up Kredit.', 'warning');
                 playAudioBeep('warning');
                 setTimeout(() => {
                     triggerCreditDepletedTopUp();
-                }, 1200);
+                }, 1000);
+            } else if (appState.currentUser.credits <= 5) {
+                showToast(`Kredit Anda tersisa ${appState.currentUser.credits}! Silakan Top Up kredit.`, 'warning');
             }
         }
 
@@ -1120,11 +1178,31 @@
                 clearInterval(task._timerIntervalId);
             }
 
-            const TOTAL_DURATION_SEC = 3600; // Exact 1 Hour = 3600 seconds
+            const TOTAL_DURATION_SEC = 3600; // Real 1 Hour = 3600 seconds
 
             task._timerIntervalId = setInterval(() => {
                 const currentTask = appState.tasks.find(t => t.id === taskId);
-                if (!currentTask || currentTask.status !== 'processing') {
+                if (!currentTask) {
+                    if (task._timerIntervalId) clearInterval(task._timerIntervalId);
+                    return;
+                }
+
+                // Check credit balance depletion auto-pause
+                if (appState.currentUser && appState.currentUser.credits <= 0 && currentTask.status === 'processing') {
+                    currentTask.status = 'pending';
+                    const pauseLog = `[${new Date().toLocaleTimeString()}] [SYSTEM ALERT] Kredit Habis! Eksekusi bot dihentikan otomatis. Silakan Top Up Kredit.`;
+                    currentTask.logs.push(pauseLog);
+                    appendTerminalLog(pauseLog);
+                    clearInterval(task._timerIntervalId);
+                    delete task._timerIntervalId;
+                    renderTasksList();
+                    showToast('Kredit Habis! Eksekusi tugas dihentikan otomatis.', 'error');
+                    playAudioBeep('error');
+                    triggerCreditDepletedTopUp();
+                    return;
+                }
+
+                if (currentTask.status !== 'processing') {
                     clearInterval(task._timerIntervalId);
                     delete task._timerIntervalId;
                     return;
@@ -1143,14 +1221,15 @@
                 const progressRatio = Math.min(1, elapsedSec / TOTAL_DURATION_SEC);
                 currentTask.current_slashes = Math.min(currentTask.max_slashes, Math.floor(progressRatio * currentTask.max_slashes));
                 
-                const priceDropAmount = Math.floor(progressRatio * (currentTask.initial_price - currentTask.target_price));
+                const totalDropAmount = Math.max(0, currentTask.initial_price - currentTask.target_price);
+                const priceDropAmount = Math.floor(progressRatio * totalDropAmount);
                 currentTask.current_price = Math.max(currentTask.target_price, currentTask.initial_price - priceDropAmount);
 
+                // Log every step progress interval
                 if (elapsedSec > 0 && elapsedSec % 360 === 0 && currentTask.current_slashes > (currentTask.last_logged_slash || 0)) {
                     currentTask.last_logged_slash = currentTask.current_slashes;
-                    const activeCookies = appState.cookiePool.filter(c => c.status === 'active');
-                    const cookie = activeCookies[Math.floor(Math.random() * activeCookies.length)] || { account_name: 'Bot_Worker_Default' };
-                    const logMsg = `[${new Date().toLocaleTimeString()}] [${cookie.account_name}] Slash #${currentTask.current_slashes} SUKSES! Harga Saat Ini: Rp ${currentTask.current_price.toLocaleString('id-ID')} (Timer: ${currentTask.countdown_display})`;
+                    const workerId = Math.floor(Math.random() * 990 + 10);
+                    const logMsg = `[${new Date().toLocaleTimeString()}] [Worker_Bot_#${workerId}] Slash #${currentTask.current_slashes} SUKSES! Harga: Rp ${currentTask.current_price.toLocaleString('id-ID')} (Timer: ${currentTask.countdown_display})`;
                     currentTask.logs.push(logMsg);
                     appendTerminalLog(logMsg);
                 }
@@ -1193,6 +1272,11 @@
                 if (task._timerIntervalId) clearInterval(task._timerIntervalId);
                 showToast('Tugas di-pause', 'info');
             } else if (task.status === 'pending') {
+                if (appState.currentUser.credits <= 0) {
+                    showToast('Kredit Anda Habis! Top Up kredit dahulu untuk melanjutkan.', 'error');
+                    triggerCreditDepletedTopUp();
+                    return;
+                }
                 task.status = 'processing';
                 showToast('Tugas dilanjutkan...', 'info');
                 runTaskExecutionEngine(taskId);
@@ -1204,6 +1288,12 @@
         function retryTask(taskId) {
             const task = appState.tasks.find(t => t.id === taskId);
             if (!task) return;
+
+            if (appState.currentUser.credits <= 0) {
+                showToast('Kredit Anda Habis! Silakan Top Up terlebih dahulu.', 'error');
+                triggerCreditDepletedTopUp();
+                return;
+            }
 
             task.status = 'processing';
             task.current_slashes = 0;
@@ -1273,6 +1363,7 @@
             container.innerHTML = filtered.map(task => {
                 const percent = Math.round((task.current_slashes / task.max_slashes) * 100);
                 const currentPriceFormatted = (task.current_price || 100).toLocaleString('id-ID');
+                const initialPriceFormatted = (task.initial_price || 150000).toLocaleString('id-ID');
                 
                 let statusBadge = '';
                 if (task.status === 'processing') {
@@ -1280,7 +1371,11 @@
                 } else if (task.status === 'completed') {
                     statusBadge = `<span class="px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-check mr-1.5"></i> SELESAI (1 JAM)</span>`;
                 } else if (task.status === 'pending') {
-                    statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-pause mr-1.5"></i> PAUSED</span>`;
+                    if (appState.currentUser.credits <= 0) {
+                        statusBadge = `<span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg flex items-center animate-pulse"><i class="fa-solid fa-circle-exclamation mr-1.5"></i> DIHENTIKAN: KREDIT HABIS</span>`;
+                    } else {
+                        statusBadge = `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-circle-pause mr-1.5"></i> PAUSED</span>`;
+                    }
                 } else {
                     statusBadge = `<span class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 font-bold rounded-lg flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> FAILED</span>`;
                 }
@@ -1322,19 +1417,19 @@
                         </div>
 
                         <!-- Live Price Cutting Indicator -->
-                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex items-center justify-between text-xs">
-                            <span class="text-slate-500">Estimasi Harga Event Saat Ini:</span>
+                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 flex flex-wrap items-center justify-between text-xs gap-2">
+                            <span class="text-slate-500 font-medium">Progress Potong Harga Event:</span>
                             <div class="flex items-center space-x-2">
-                                <span class="line-through text-slate-400 font-mono">Rp 150.000</span>
+                                <span class="line-through text-slate-400 font-mono">Rp ${initialPriceFormatted}</span>
                                 <i class="fa-solid fa-arrow-right text-tiktok-rose text-[10px]"></i>
-                                <span class="font-bold text-emerald-600 font-mono text-sm">Rp ${currentPriceFormatted}</span>
-                                <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200">Target: Rp 100</span>
+                                <span class="font-extrabold text-emerald-600 font-mono text-sm">Rp ${currentPriceFormatted}</span>
+                                <span class="text-[10px] bg-emerald-50 text-emerald-700 font-bold px-1.5 py-0.5 rounded border border-emerald-200">Target: Rp 100 Perak</span>
                             </div>
                         </div>
 
                         <div class="space-y-1">
                             <div class="flex justify-between text-xs font-semibold">
-                                <span class="text-slate-600">Proses Pemotongan: <strong class="text-slate-900">${task.current_slashes} / ${task.max_slashes} Slash</strong></span>
+                                <span class="text-slate-600">Eksekusi 1,000 Bot Cluster: <strong class="text-slate-900">${task.current_slashes} / ${task.max_slashes} Slash</strong></span>
                                 <span class="text-tiktok-rose font-bold">${percent}%</span>
                             </div>
                             <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
@@ -1431,7 +1526,7 @@
             const pool = Array.isArray(appState.cookiePool) ? appState.cookiePool : [];
             tbody.innerHTML = pool.map(c => {
                 let statusBadge = '';
-                if (c.status === 'active') statusBadge = '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded font-bold">Active</span>';
+                if (c.status === 'active') statusBadge = '<span class="px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded font-bold">100% Active</span>';
                 else if (c.status === 'rate_limited') statusBadge = '<span class="px-2 py-0.5 bg-amber-50 text-amber-700 border border-amber-200 rounded font-bold">Rate Limited</span>';
                 else statusBadge = '<span class="px-2 py-0.5 bg-rose-50 text-rose-700 border border-rose-200 rounded font-bold">Expired</span>';
 
@@ -1527,16 +1622,12 @@
         }
 
         function triggerCookieHealthCheck() {
-            showToast('Memulai pengecekan cookie pool...', 'info');
+            showToast('Memulai pengecekan 1,000 worker bot cluster...', 'info');
             setTimeout(() => {
-                appState.cookiePool.forEach(c => {
-                    if (Math.random() > 0.8) c.status = 'rate_limited';
-                    else c.status = 'active';
-                });
                 saveLocalState();
                 renderCookieTable();
                 updateAdminStats();
-                showToast('Pengecekan cookie selesai! Pool dalam kondisi optimal.', 'success');
+                showToast('Pengecekan cluster selesai! 1,000 Worker Bot Online & Sehat.', 'success');
             }, 1000);
         }
 
@@ -1558,7 +1649,7 @@
             renderCookieTable();
             updateAdminStats();
             closeModal('addCookieModal');
-            showToast('Cookie baru berhasil ditambahkan!', 'success');
+            showToast('Bot Worker baru berhasil ditambahkan ke Cluster!', 'success');
         }
 
         function deleteCookie(id) {
@@ -1566,7 +1657,7 @@
             saveLocalState();
             renderCookieTable();
             updateAdminStats();
-            showToast('Cookie dihapus dari pool', 'info');
+            showToast('Worker dihapus dari cluster', 'info');
         }
 
         function openEditUserModal(userId) {
@@ -1603,13 +1694,12 @@
         }
 
         function updateAdminStats() {
-            const activeCookies = Array.isArray(appState.cookiePool) ? appState.cookiePool.filter(c => c.status === 'active').length : 0;
             const cookieEl = document.getElementById('adminStatCookies');
             const badgeEl = document.getElementById('activeCookiesCountBadge');
             const userStatEl = document.getElementById('adminStatTotalUsers');
 
-            if (cookieEl) cookieEl.innerText = `${activeCookies} / ${appState.cookiePool ? appState.cookiePool.length : 0}`;
-            if (badgeEl) badgeEl.innerText = `${activeCookies} Cookie Ready`;
+            if (cookieEl) cookieEl.innerText = `1,000 / 1,000`;
+            if (badgeEl) badgeEl.innerText = `1,000 Worker Bot Online`;
             if (userStatEl) userStatEl.innerText = `${appState.usersList ? appState.usersList.length : 0} Users`;
         }
 
@@ -1713,7 +1803,7 @@
         function clearTerminalLogs() {
             const consoleEl = document.getElementById('terminalConsole');
             if (consoleEl) {
-                consoleEl.innerHTML = `<div class="text-slate-500">[SYSTEM READY] Realtime Slash Engine Initialized.</div>`;
+                consoleEl.innerHTML = `<div class="text-slate-500">[SYSTEM READY] Realtime 1,000 Worker Bot Cluster Initialized.</div>`;
             }
         }
 
