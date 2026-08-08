@@ -1,9 +1,1 @@
-/* STREAMING_CHUNK:Configuring Vercel Deployment Settings... /
-{
-"version": 2,
-"name": "tiktok-slash-engine",
-"cleanUrls": true,
-"trailingSlash": false,
-"headers": [
-{
-"source": "/(.)","headers": [{"key": "X-Content-Type-Options","value": "nosniff"},{"key": "X-Frame-Options","value": "SAMEORIGIN"},{"key": "X-XSS-Protection","value": "1; mode=block"}]}]}
+{"version": 2,"name": "maxtiktok","cleanUrls": true,"trailingSlash": false,"headers": [{"source": "/(.*)","headers": [{"key": "X-Content-Type-Options","value": "nosniff"},{"key": "X-Frame-Options","value": "SAMEORIGIN"},{"key": "X-XSS-Protection","value": "1; mode=block"}]}]}
