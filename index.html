@@ -861,6 +861,72 @@
 
         let supabaseClient = null;
 
+        function initSupabaseClient() {
+            if (typeof window.supabase !== 'undefined' && SUPABASE_URL && SUPABASE_ANON_KEY) {
+                try {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                } catch (e) {
+                    console.warn("Supabase init fallback:", e);
+                }
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('loginUsername').value.trim();
+            const passwordInput = document.getElementById('loginPassword').value.trim();
+
+            if (!usernameInput || !passwordInput) {
+                showToast('Username dan password wajib diisi!', 'error');
+                return;
+            }
+
+            // Match account against user list
+            const matchedUser = appState.usersList.find(
+                u => (u.email.toLowerCase() === usernameInput.toLowerCase() || u.id === usernameInput) && u.password === passwordInput
+            );
+
+            if (matchedUser) {
+                appState.currentUser = { ...matchedUser };
+                appState.isAuthenticated = true;
+                saveLocalState();
+                checkAuthAndInit();
+                showToast(`Login berhasil! Selamat datang kembali, ${matchedUser.email}.`, 'success');
+                playAudioBeep('success');
+            } else {
+                showToast('Username/Email atau Password salah!', 'error');
+                playAudioBeep('error');
+            }
+        }
+
+        function handleLogout() {
+            appState.isAuthenticated = false;
+            appState.currentUser = null;
+            saveLocalState();
+            showToast('Anda telah keluar dari sesi akun.', 'info');
+            checkAuthAndInit();
+        }
+
+        function setFormMode(mode) {
+            appState.formMode = mode;
+            const singleContainer = document.getElementById('singleLinkContainer');
+            const batchContainer = document.getElementById('batchLinkContainer');
+            const btnSingle = document.getElementById('mode-single-btn');
+            const btnBatch = document.getElementById('mode-batch-btn');
+
+            if (mode === 'single') {
+                singleContainer.classList.remove('hidden');
+                batchContainer.classList.add('hidden');
+                btnSingle.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
+                btnBatch.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+            } else {
+                singleContainer.classList.add('hidden');
+                batchContainer.classList.remove('hidden');
+                btnBatch.className = "px-2.5 py-1 rounded-md bg-white text-slate-800 shadow-xs";
+                btnSingle.className = "px-2.5 py-1 rounded-md text-slate-600 hover:text-slate-900";
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             initSupabaseClient();
             loadLocalState();
