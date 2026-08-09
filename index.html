@@ -1128,13 +1128,36 @@
             if (typeof window.supabase !== 'undefined' && SUPABASE_URL && SUPABASE_ANON_KEY) {
                 try {
                     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    fetchUsersFromSupabase();
                 } catch (e) {
                     console.warn("Supabase init fallback:", e);
                 }
             }
         }
 
-        function handleLoginSubmit(e) {
+        async function fetchUsersFromSupabase() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient.from('profiles').select('*');
+                if (data && data.length > 0) {
+                    appState.usersList = data.map(p => ({
+                        id: p.id || 'usr_' + Math.random().toString().slice(-5),
+                        email: p.email,
+                        role: p.role || 'user',
+                        credits: p.credits !== undefined ? p.credits : 25,
+                        password: p.password || 'user123',
+                        created_at: p.created_at ? p.created_at.split('T')[0] : '2026-02-08'
+                    }));
+                    saveLocalState();
+                    renderUsersTable();
+                    updateAdminStats();
+                }
+            } catch (err) {
+                console.warn("Gagal sinkronisasi data user dari Supabase:", err);
+            }
+        }
+
+        async function handleLoginSubmit(e) {
             e.preventDefault();
             const usernameInput = document.getElementById('loginUsername').value.trim();
             const passwordInput = document.getElementById('loginPassword').value.trim();
@@ -1142,6 +1165,11 @@
             if (!usernameInput || !passwordInput) {
                 showToast('Username dan password wajib diisi!', 'error');
                 return;
+            }
+
+            // Sync/Fetch users dari Supabase terlebih dahulu agar akun terbaru dari HP lain langsung terbaca
+            if (supabaseClient) {
+                await fetchUsersFromSupabase();
             }
 
             const matchedUser = appState.usersList.find(
@@ -1160,13 +1188,51 @@
                 playAudioBeep('error');
             }
         }
+        async function handleAddUserSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value.trim();
+            const role = document.getElementById('newUserRole').value;
+            const credits = parseInt(document.getElementById('newUserCredits').value) || 10;
 
-        function handleLogout() {
-            appState.isAuthenticated = false;
-            appState.currentUser = null;
+            if (appState.usersList.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+                showToast('Email/Username sudah digunakan!', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: 'usr_' + Date.now().toString().slice(-5),
+                email: email,
+                password: password,
+                role: role,
+                credits: credits,
+                created_at: new Date().toISOString().split('T')[0]
+            };
+
+            // Simpan akun baru ke Supabase Cloud agar bisa diakses dari HP mana pun
+            if (supabaseClient) {
+                try {
+                    await supabaseClient.from('profiles').insert([{
+                        email: email,
+                        password: password,
+                        role: role,
+                        credits: credits
+                    }]);
+                } catch (err) {
+                    console.error("Gagal menyimpan ke Supabase cloud:", err);
+                }
+            }
+
+            appState.usersList.push(newUser);
             saveLocalState();
-            showToast('Anda telah keluar dari sesi akun.', 'info');
-            checkAuthAndInit();
+            renderUsersTable();
+            updateAdminStats();
+            closeModal('addUserModal');
+            
+            document.getElementById('newUserEmail').value = '';
+            document.getElementById('newUserPassword').value = '';
+
+            showToast(`User baru (${email}) berhasil ditambahkan & tersimpan di Cloud!`, 'success');
         }
 
         function checkAuthAndInit() {
